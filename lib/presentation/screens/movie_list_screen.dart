@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/constants/constants.dart';
-import '../../core/utils/debouncer.dart';
 import '../cubit/movie_list_cubit.dart';
-import '../cubit/search_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/error_widget.dart';
@@ -19,11 +16,6 @@ class MovieListScreen extends StatefulWidget {
 class _MovieListScreenState extends State<MovieListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
-  final Debouncer _debouncer = Debouncer(
-    delay: const Duration(milliseconds: AppConstants.debounceDuration),
-  );
-  bool _isSearching = false;
 
   @override
   void initState() {
@@ -68,8 +60,6 @@ class _MovieListScreenState extends State<MovieListScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.dispose();
-    _debouncer.dispose();
     super.dispose();
   }
 
@@ -77,118 +67,21 @@ class _MovieListScreenState extends State<MovieListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: 'Search movies...',
-                  border: InputBorder.none,
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchController.clear();
-                            context.read<SearchCubit>().clearSearch();
-                            setState(() {
-                              _isSearching = false;
-                            });
-                          },
-                        )
-                      : null,
-                ),
-                onChanged: (value) {
-                  _debouncer.run(() {
-                    if (value.isNotEmpty) {
-                      context.read<SearchCubit>().search(value);
-                    }
-                  });
-                },
-              )
-            : const Text('Movies'),
-        actions: [
-          if (!_isSearching)
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                setState(() {
-                  _isSearching = true;
-                });
-              },
-            ),
-        ],
-        bottom: _isSearching
-            ? null
-            : TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(text: _getCategoryName(0)),
-                  Tab(text: _getCategoryName(1)),
-                  Tab(text: _getCategoryName(2)),
-                ],
-                indicatorColor: Theme.of(context).colorScheme.primary,
-                labelColor: Theme.of(context).colorScheme.primary,
-                unselectedLabelColor: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withOpacity(0.6),
-              ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: _getCategoryName(0)),
+            Tab(text: _getCategoryName(1)),
+            Tab(text: _getCategoryName(2)),
+          ],
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withOpacity(0.6),
+        ),
       ),
-      body: _isSearching ? _buildSearchResults() : _buildMovieList(),
-    );
-  }
-
-  Widget _buildSearchResults() {
-    return BlocBuilder<SearchCubit, SearchState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const ShimmerLoading();
-        }
-        if (state.error != null) {
-          return AppErrorWidget(
-            message: state.error!,
-            onRetry: () => context.read<SearchCubit>().search(state.query),
-          );
-        }
-        if (state.results.isEmpty && state.query.isNotEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.search_off,
-                  size: 64,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withOpacity(0.4),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No results found for "${state.query}"',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-          );
-        }
-        return GridView.builder(
-          padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.65,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-          ),
-          itemCount: state.results.length,
-          itemBuilder: (context, index) {
-            final movie = state.results[index];
-            return MovieCard(
-              movie: movie,
-              index: index,
-              onTap: () => _navigateToDetail(movie.id),
-            );
-          },
-        );
-      },
+      body: _buildMovieList(),
     );
   }
 
@@ -208,9 +101,9 @@ class _MovieListScreenState extends State<MovieListScreen>
           return AppErrorWidget(
             message: state.error!,
             onRetry: () => context.read<MovieListCubit>().loadMovies(
-              _getCategory(_tabController.index),
-              refresh: true,
-            ),
+                  _getCategory(_tabController.index),
+                  refresh: true,
+                ),
           );
         }
         final movies = state.getMoviesByCategory(
@@ -242,17 +135,17 @@ class _MovieListScreenState extends State<MovieListScreen>
             if (notification is ScrollEndNotification &&
                 notification.metrics.extentAfter < 200) {
               context.read<MovieListCubit>().loadMoreMovies(
-                _getCategory(_tabController.index),
-              );
+                    _getCategory(_tabController.index),
+                  );
             }
             return false;
           },
           child: RefreshIndicator(
             onRefresh: () async {
               await context.read<MovieListCubit>().loadMovies(
-                _getCategory(_tabController.index),
-                refresh: true,
-              );
+                    _getCategory(_tabController.index),
+                    refresh: true,
+                  );
             },
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
@@ -295,13 +188,12 @@ class _MovieListScreenState extends State<MovieListScreen>
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(0, 0.1),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                  ),
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.1),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut),
+              ),
               child: child,
             ),
           );

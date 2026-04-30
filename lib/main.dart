@@ -16,6 +16,7 @@ import 'presentation/cubit/movie_list_cubit.dart';
 import 'presentation/cubit/search_cubit.dart';
 import 'presentation/screens/favorites_screen.dart';
 import 'presentation/screens/movie_list_screen.dart';
+import 'presentation/screens/search_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,7 +78,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [MovieListScreen(), FavoritesScreen()];
+  final List<Widget> _screens = const [
+    MovieListScreen(),
+    SearchScreen(),
+    FavoritesScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             _currentIndex = index;
           });
-          if (index == 1) {
+          if (index == 2) {
             context.read<FavoritesCubit>().loadFavorites();
           }
         },
@@ -98,6 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.movie_outlined),
             selectedIcon: Icon(Icons.movie),
             label: 'Movies',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search),
+            label: 'Search',
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_border),

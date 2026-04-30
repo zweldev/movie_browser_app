@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/constants/constants.dart';
 import '../../core/utils/debouncer.dart';
+import '../cubit/movie_list_cubit.dart';
 import '../cubit/search_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/shimmer_loading.dart';
@@ -61,8 +62,32 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  int _getCrossAxisCount(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return 2;
+    if (width < 600) return 2;
+    if (width < 900) return 3;
+    return 4;
+  }
+
+  double _getChildAspectRatio(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 600) return 0.65;
+    return 0.7;
+  }
+
+  double _getSpacing(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 600) return 12;
+    return 16;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final crossAxisCount = _getCrossAxisCount(context);
+    final childAspectRatio = _getChildAspectRatio(context);
+    final spacing = _getSpacing(context);
+
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -93,7 +118,9 @@ class _SearchScreenState extends State<SearchScreen> {
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const ShimmerLoading();
+            return ShimmerLoading(
+              crossAxisCount: crossAxisCount,
+            );
           }
           if (state.error != null) {
             return AppErrorWidget(
@@ -148,12 +175,12 @@ class _SearchScreenState extends State<SearchScreen> {
             );
           }
           return GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.65,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+            padding: EdgeInsets.all(spacing),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: childAspectRatio,
+              crossAxisSpacing: spacing,
+              mainAxisSpacing: spacing,
             ),
             itemCount: state.results.length,
             itemBuilder: (context, index) {
@@ -161,6 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return MovieCard(
                 movie: movie,
                 index: index,
+                category: MovieCategory.popular,
                 onTap: () => _navigateToDetail(movie.id),
               );
             },

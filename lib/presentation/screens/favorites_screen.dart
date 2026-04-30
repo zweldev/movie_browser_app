@@ -20,14 +20,40 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     context.read<FavoritesCubit>().loadFavorites();
   }
 
+  int _getCrossAxisCount(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return 2;
+    if (width < 600) return 2;
+    if (width < 900) return 3;
+    return 4;
+  }
+
+  double _getChildAspectRatio(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 600) return 0.65;
+    return 0.7;
+  }
+
+  double _getSpacing(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 600) return 12;
+    return 16;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final crossAxisCount = _getCrossAxisCount(context);
+    final childAspectRatio = _getChildAspectRatio(context);
+    final spacing = _getSpacing(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Favorites')),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const ShimmerLoading();
+            return ShimmerLoading(
+              crossAxisCount: crossAxisCount,
+            );
           }
           if (state.error != null) {
             return AppErrorWidget(
@@ -56,22 +82,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   Text(
                     'Tap the heart icon on a movie to add it here',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.6),
-                    ),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
+                        ),
                   ),
                 ],
               ),
             );
           }
           return GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.65,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+            padding: EdgeInsets.all(spacing),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: childAspectRatio,
+              crossAxisSpacing: spacing,
+              mainAxisSpacing: spacing,
             ),
             itemCount: state.favorites.length,
             itemBuilder: (context, index) {
@@ -128,13 +154,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(0, 0.1),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                  ),
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.1),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut),
+              ),
               child: child,
             ),
           );

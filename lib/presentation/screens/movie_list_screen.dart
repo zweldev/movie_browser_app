@@ -67,6 +67,7 @@ class _MovieListScreenState extends State<MovieListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 0,
         bottom: TabBar(
           controller: _tabController,
           tabs: [

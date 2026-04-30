@@ -73,8 +73,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
       builder: (context, state) {
         final movies = state.getMoviesByCategory(MovieCategory.popular);
         final screenWidth = MediaQuery.of(context).size.width;
-        final cardHeight = screenWidth < 600 ? 280.0 : 350.0;
         final spacing = screenWidth < 600 ? 12.0 : 16.0;
+        final popularCardWidth = screenWidth * 0.85;
+        final popularCardHeight =
+            popularCardWidth * 1.5; // 2:3 poster aspect ratio
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,14 +98,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
             ),
             if (state.isLoading && movies.isEmpty)
               SizedBox(
-                height: cardHeight + 80,
+                height: popularCardHeight,
                 child: const Center(
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               )
             else if (state.error != null && movies.isEmpty)
               SizedBox(
-                height: cardHeight + 80,
+                height: popularCardHeight,
                 child: Center(
                   child: AppErrorWidget(
                     message: state.error!,
@@ -116,7 +118,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               )
             else if (movies.isEmpty)
               SizedBox(
-                height: cardHeight + 80,
+                height: popularCardHeight,
                 child: Center(
                   child: Text(
                     'No movies found',
@@ -126,7 +128,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               )
             else
               SizedBox(
-                height: cardHeight,
+                height: popularCardHeight,
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
                     if (notification is ScrollEndNotification &&
@@ -199,7 +201,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
             (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
         final childAspectRatio = screenWidth < 600 ? 0.65 : 0.7;
         final cardHeight = cardWidth / childAspectRatio;
-        final sectionHeight = cardHeight + 80;
+        final sectionHeight = cardHeight;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

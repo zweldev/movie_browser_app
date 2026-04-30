@@ -21,7 +21,7 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          options.queryParameters['api_key'] = dotenv.env['TMDB_API_KEY'];
+          options.queryParameters['api_key'] = dotenv.env['TMDB_API_KEY']; //! TO CHECK
           return handler.next(options);
         },
         onError: (error, handler) {

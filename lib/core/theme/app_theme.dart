@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   AppTheme._();
@@ -11,7 +12,16 @@ class AppTheme {
         seedColor: Colors.deepPurple,
         brightness: Brightness.light,
       ),
-      appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+      textTheme: GoogleFonts.interTextTheme(),
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        elevation: 0,
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.deepPurple,
+        ),
+      ),
       cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -27,7 +37,16 @@ class AppTheme {
         seedColor: Colors.deepPurple,
         brightness: Brightness.dark,
       ),
-      appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        elevation: 0,
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
+      ),
       cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

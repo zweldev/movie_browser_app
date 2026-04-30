@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../core/constants/constants.dart';
 import '../cubit/movie_detail_cubit.dart';
 import '../widgets/error_widget.dart';
+import 'image_viewer_screen.dart';
 
 const Map<int, String> _genreMap = {
   28: 'Action',
@@ -184,15 +185,29 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                         background: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Hero(
-                              tag: 'movie_poster_${movie.id}',
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    ApiConstants.getPosterUrl(movie.posterPath),
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) => Container(
-                                  color: colorScheme.surfaceContainerHighest,
-                                  child: const Icon(Icons.movie, size: 64),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ImageViewerScreen(
+                                      imageUrl: ApiConstants.getPosterUrl(
+                                          movie.posterPath),
+                                      heroTag: 'movie_poster_${movie.id}',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Hero(
+                                tag: 'movie_poster_${movie.id}',
+                                child: CachedNetworkImage(
+                                  imageUrl: ApiConstants.getPosterUrl(
+                                      movie.posterPath),
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    color: colorScheme.surfaceContainerHighest,
+                                    child: const Icon(Icons.movie, size: 64),
+                                  ),
                                 ),
                               ),
                             ),
@@ -203,7 +218,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     Colors.transparent,
-                                    Colors.black.withOpacity(0.7),
+                                    Colors.black.withValues(alpha: 0.7),
                                   ],
                                   stops: const [0.5, 1.0],
                                 ),
@@ -246,22 +261,22 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           children: [
                             Row(
                               children: [
-                                _buildRatingChip(movie.voteAverage),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '(${movie.voteCount} votes)',
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                _buildRating(movie.voteAverage),
+                                const SizedBox(width: 16),
+                                _buildMetadataItem(
+                                  Icons.people_outline,
+                                  '${movie.voteCount}',
                                 ),
                                 const SizedBox(width: 16),
                                 if (movie.releaseDate != null &&
                                     movie.releaseDate!.isNotEmpty)
-                                  Chip(
-                                    label: Text(movie.releaseYear),
-                                    visualDensity: VisualDensity.compact,
+                                  _buildMetadataItem(
+                                    Icons.calendar_today_outlined,
+                                    movie.releaseYear,
                                   ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 16),
                             if (movie.genreIds.isNotEmpty)
                               Wrap(
                                 spacing: 8,
@@ -269,18 +284,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                 children: movie.genreIds
                                     .map((id) => _genreMap[id])
                                     .where((genre) => genre != null)
-                                    .map((genre) => Chip(
-                                          label: Text(
-                                            genre!,
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          ),
-                                          visualDensity: VisualDensity.compact,
-                                          padding: EdgeInsets.zero,
-                                          labelPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 4),
-                                        ))
+                                    .map((genre) => _buildGenreChip(genre!))
                                     .toList(),
                               ),
                             const SizedBox(height: 24),
@@ -320,7 +324,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           scale: scale,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -339,11 +343,54 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     );
   }
 
-  Widget _buildRatingChip(double rating) {
-    return Chip(
-      avatar: Icon(Icons.star, size: 18, color: Colors.amber[700]),
-      label: Text(rating.toStringAsFixed(1)),
-      visualDensity: VisualDensity.compact,
+  Widget _buildRating(double rating) {
+    return Row(
+      children: [
+        Icon(Icons.star_rounded, size: 20, color: Colors.amber[600]),
+        const SizedBox(width: 4),
+        Text(
+          rating.toStringAsFixed(1),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetadataItem(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Theme.of(context).colorScheme.outline),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenreChip(String genre) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        genre,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+      ),
     );
   }
 }

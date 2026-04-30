@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/constants.dart';
 import '../../domain/entities/movie.dart';
+import '../cubit/movie_list_cubit.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
   final VoidCallback onTap;
   final int index;
+  final MovieCategory? category;
 
   const MovieCard({
     super.key,
     required this.movie,
     required this.onTap,
     this.index = 0,
+    this.category,
   });
 
   @override
@@ -51,7 +54,8 @@ class MovieCard extends StatelessWidget {
                 children: [
                   // 1. Background Image
                   Hero(
-                    tag: 'movie_poster_${movie.id}',
+                    tag:
+                        'movie_poster_${movie.id}_${category?.name ?? 'default'}',
                     child: CachedNetworkImage(
                       imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
                       fit: BoxFit.cover,
@@ -74,7 +78,7 @@ class MovieCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   // 2. Bottom Gradient for text readability
                   Positioned(
                     bottom: 0,
@@ -98,7 +102,7 @@ class MovieCard extends StatelessWidget {
                     ),
                   ),
 
-                  // 5. Bottom Content (Rating, Year, Title)
+                  // 3. Bottom Content (Rating, Year, Title)
                   Positioned(
                     bottom: 16,
                     left: 12,

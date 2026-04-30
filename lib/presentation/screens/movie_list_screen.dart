@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/theme_toggle_button.dart';
 import '../cubit/movie_list_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/error_widget.dart';
 import 'movie_detail_screen.dart';
 
 class MovieListScreen extends StatefulWidget {
-  const MovieListScreen({super.key});
+  final VoidCallback toggleTheme;
+
+  const MovieListScreen({super.key, required this.toggleTheme});
 
   @override
   State<MovieListScreen> createState() => _MovieListScreenState();
@@ -47,7 +50,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return MovieDetailScreen(movieId: movieId);
+          return MovieDetailScreen(
+            movieId: movieId,
+            toggleTheme: widget.toggleTheme,
+          );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -306,16 +312,27 @@ class _MovieListScreenState extends State<MovieListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refreshAll,
-        child: ListView(
-          children: [
-            _buildPopularSection(context),
-            _buildCategorySection(context, 'Top Rated', MovieCategory.topRated),
-            _buildCategorySection(context, 'Upcoming', MovieCategory.upcoming),
-            const SizedBox(height: 16),
-          ],
-        ),
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: _refreshAll,
+            child: ListView(
+              children: [
+                _buildPopularSection(context),
+                _buildCategorySection(
+                    context, 'Top Rated', MovieCategory.topRated),
+                _buildCategorySection(
+                    context, 'Upcoming', MovieCategory.upcoming),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            right: 16,
+            child: ThemeToggleButton(onPressed: widget.toggleTheme),
+          ),
+        ],
       ),
     );
   }

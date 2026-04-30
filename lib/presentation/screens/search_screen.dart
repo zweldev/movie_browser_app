@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/constants/constants.dart';
 import '../../core/utils/debouncer.dart';
+import '../widgets/theme_toggle_button.dart';
 import '../cubit/movie_list_cubit.dart';
 import '../cubit/search_cubit.dart';
 import '../widgets/movie_card.dart';
@@ -10,7 +11,9 @@ import '../widgets/error_widget.dart';
 import 'movie_detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final VoidCallback toggleTheme;
+
+  const SearchScreen({super.key, required this.toggleTheme});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -41,7 +44,10 @@ class _SearchScreenState extends State<SearchScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return MovieDetailScreen(movieId: movieId);
+          return MovieDetailScreen(
+            movieId: movieId,
+            toggleTheme: widget.toggleTheme,
+          );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -114,6 +120,9 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
         ),
+        actions: [
+          ThemeToggleButton(onPressed: widget.toggleTheme),
+        ],
       ),
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {

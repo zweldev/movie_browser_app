@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../core/constants/constants.dart';
 import '../cubit/movie_detail_cubit.dart';
 import '../widgets/error_widget.dart';
+import '../widgets/theme_toggle_button.dart';
 import 'image_viewer_screen.dart';
 
 const Map<int, String> _genreMap = {
@@ -31,8 +32,13 @@ const Map<int, String> _genreMap = {
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
+  final VoidCallback toggleTheme;
 
-  const MovieDetailScreen({super.key, required this.movieId});
+  const MovieDetailScreen({
+    super.key,
+    required this.movieId,
+    required this.toggleTheme,
+  });
 
   @override
   State<MovieDetailScreen> createState() => _MovieDetailScreenState();
@@ -237,6 +243,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           onTap: () => Navigator.of(context).pop(),
                         ),
                         const Spacer(),
+                        ThemeToggleButton(onPressed: widget.toggleTheme),
+                        const SizedBox(width: 8),
                         _buildFavoriteButton(state),
                       ],
                     ),

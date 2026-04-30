@@ -36,40 +36,57 @@ void main() async {
   runApp(MovieBrowserApp(movieRepository: movieRepository));
 }
 
-class MovieBrowserApp extends StatelessWidget {
+class MovieBrowserApp extends StatefulWidget {
   final MovieRepository movieRepository;
 
   const MovieBrowserApp({super.key, required this.movieRepository});
+
+  @override
+  State<MovieBrowserApp> createState() => _MovieBrowserAppState();
+}
+
+class _MovieBrowserAppState extends State<MovieBrowserApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  void _toggleTheme() {
+    setState(() {
+      _themeMode =
+          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MovieListCubit>(
-          create: (_) => MovieListCubit(movieRepository),
+          create: (_) => MovieListCubit(widget.movieRepository),
         ),
         BlocProvider<MovieDetailCubit>(
-          create: (_) => MovieDetailCubit(movieRepository),
+          create: (_) => MovieDetailCubit(widget.movieRepository),
         ),
         BlocProvider<FavoritesCubit>(
-          create: (_) => FavoritesCubit(movieRepository),
+          create: (_) => FavoritesCubit(widget.movieRepository),
         ),
-        BlocProvider<SearchCubit>(create: (_) => SearchCubit(movieRepository)),
+        BlocProvider<SearchCubit>(
+            create: (_) => SearchCubit(widget.movieRepository)),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: const HomeScreen(),
+        themeMode: _themeMode,
+        home: HomeScreen(toggleTheme: _toggleTheme),
       ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback toggleTheme;
+
+  const HomeScreen({super.key, required this.toggleTheme});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -78,10 +95,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    MovieListScreen(),
-    SearchScreen(),
-    FavoritesScreen(),
+  late final List<Widget> _screens = [
+    MovieListScreen(toggleTheme: widget.toggleTheme),
+    SearchScreen(toggleTheme: widget.toggleTheme),
+    FavoritesScreen(toggleTheme: widget.toggleTheme),
   ];
 
   @override

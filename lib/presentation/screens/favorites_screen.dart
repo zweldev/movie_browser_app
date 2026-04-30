@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/theme_toggle_button.dart';
 import '../cubit/favorites_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/shimmer_loading.dart';
@@ -7,7 +8,9 @@ import '../widgets/error_widget.dart';
 import 'movie_detail_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({super.key});
+  final VoidCallback toggleTheme;
+
+  const FavoritesScreen({super.key, required this.toggleTheme});
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -47,7 +50,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final spacing = _getSpacing(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Favorites')),
+      appBar: AppBar(
+        title: const Text('Favorites'),
+        actions: [
+          ThemeToggleButton(onPressed: widget.toggleTheme),
+        ],
+      ),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -148,7 +156,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return MovieDetailScreen(movieId: movieId);
+          return MovieDetailScreen(
+            movieId: movieId,
+            toggleTheme: widget.toggleTheme,
+          );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(

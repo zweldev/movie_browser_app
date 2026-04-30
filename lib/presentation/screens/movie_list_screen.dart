@@ -68,7 +68,117 @@ class _MovieListScreenState extends State<MovieListScreen> {
     );
   }
 
-  Widget _buildMovieSection(
+  Widget _buildPopularSection(BuildContext context) {
+    return BlocBuilder<MovieListCubit, MovieListState>(
+      builder: (context, state) {
+        final movies = state.getMoviesByCategory(MovieCategory.popular);
+        final screenWidth = MediaQuery.of(context).size.width;
+        final cardHeight = screenWidth < 600 ? 280.0 : 350.0;
+        final spacing = screenWidth < 600 ? 12.0 : 16.0;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                spacing + 4,
+                screenWidth < 600 ? 16 : 24,
+                spacing + 4,
+                screenWidth < 600 ? 8 : 12,
+              ),
+              child: Text(
+                'Popular',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth < 600 ? 20 : 24,
+                    ),
+              ),
+            ),
+            if (state.isLoading && movies.isEmpty)
+              SizedBox(
+                height: cardHeight + 80,
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              )
+            else if (state.error != null && movies.isEmpty)
+              SizedBox(
+                height: cardHeight + 80,
+                child: Center(
+                  child: AppErrorWidget(
+                    message: state.error!,
+                    onRetry: () => context.read<MovieListCubit>().loadMovies(
+                          MovieCategory.popular,
+                          refresh: true,
+                        ),
+                  ),
+                ),
+              )
+            else if (movies.isEmpty)
+              SizedBox(
+                height: cardHeight + 80,
+                child: Center(
+                  child: Text(
+                    'No movies found',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              )
+            else
+              SizedBox(
+                height: cardHeight,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is ScrollEndNotification &&
+                        notification.metrics.extentAfter < 200) {
+                      context
+                          .read<MovieListCubit>()
+                          .loadMoreMovies(MovieCategory.popular);
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    controller: _scrollControllers[MovieCategory.popular],
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: spacing),
+                    itemCount: movies.length + (state.isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index >= movies.length) {
+                        return SizedBox(
+                          width: screenWidth < 600 ? 40 : 60,
+                          child: Center(
+                            child: SizedBox(
+                              width: screenWidth < 600 ? 16 : 20,
+                              height: screenWidth < 600 ? 16 : 20,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      final movie = movies[index];
+                      return Container(
+                        width: screenWidth - (spacing * 2),
+                        margin: EdgeInsets.only(right: spacing),
+                        child: MovieCard(
+                          movie: movie,
+                          index: index,
+                          category: MovieCategory.popular,
+                          onTap: () => _navigateToDetail(movie.id),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCategorySection(
     BuildContext context,
     String title,
     MovieCategory category,
@@ -76,29 +186,49 @@ class _MovieListScreenState extends State<MovieListScreen> {
     return BlocBuilder<MovieListCubit, MovieListState>(
       builder: (context, state) {
         final movies = state.getMoviesByCategory(category);
+        final screenWidth = MediaQuery.of(context).size.width;
+        final crossAxisCount = screenWidth < 360
+            ? 2
+            : screenWidth < 600
+                ? 2
+                : screenWidth < 900
+                    ? 3
+                    : 4;
+        final spacing = screenWidth < 600 ? 12.0 : 16.0;
+        final cardWidth =
+            (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
+        final childAspectRatio = screenWidth < 600 ? 0.65 : 0.7;
+        final cardHeight = cardWidth / childAspectRatio;
+        final sectionHeight = cardHeight + 80;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
+              padding: EdgeInsets.fromLTRB(
+                spacing + 4,
+                screenWidth < 600 ? 16 : 24,
+                spacing + 4,
+                screenWidth < 600 ? 8 : 12,
+              ),
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: screenWidth < 600 ? 20 : 24,
                     ),
               ),
             ),
             if (state.isLoading && movies.isEmpty)
-              const SizedBox(
-                height: 230,
-                child: Center(
+              SizedBox(
+                height: sectionHeight,
+                child: const Center(
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               )
             else if (state.error != null && movies.isEmpty)
               SizedBox(
-                height: 230,
+                height: sectionHeight,
                 child: Center(
                   child: AppErrorWidget(
                     message: state.error!,
@@ -111,7 +241,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               )
             else if (movies.isEmpty)
               SizedBox(
-                height: 230,
+                height: sectionHeight,
                 child: Center(
                   child: Text(
                     'No movies found',
@@ -121,7 +251,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
               )
             else
               SizedBox(
-                height: 230,
+                height: sectionHeight,
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
                     if (notification is ScrollEndNotification &&
@@ -133,28 +263,31 @@ class _MovieListScreenState extends State<MovieListScreen> {
                   child: ListView.builder(
                     controller: _scrollControllers[category],
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: spacing),
                     itemCount: movies.length + (state.isLoadingMore ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index >= movies.length) {
-                        return const SizedBox(
-                          width: 60,
+                        return SizedBox(
+                          width: screenWidth < 600 ? 40 : 60,
                           child: Center(
                             child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              width: screenWidth < 600 ? 16 : 20,
+                              height: screenWidth < 600 ? 16 : 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
                             ),
                           ),
                         );
                       }
                       final movie = movies[index];
                       return Container(
-                        width: 200,
-                        margin: const EdgeInsets.only(right: 16),
+                        width: cardWidth,
+                        margin: EdgeInsets.only(right: spacing),
                         child: MovieCard(
                           movie: movie,
                           index: index,
+                          category: category,
                           onTap: () => _navigateToDetail(movie.id),
                         ),
                       );
@@ -175,9 +308,9 @@ class _MovieListScreenState extends State<MovieListScreen> {
         onRefresh: _refreshAll,
         child: ListView(
           children: [
-            _buildMovieSection(context, 'Popular', MovieCategory.popular),
-            _buildMovieSection(context, 'Top Rated', MovieCategory.topRated),
-            _buildMovieSection(context, 'Upcoming', MovieCategory.upcoming),
+            _buildPopularSection(context),
+            _buildCategorySection(context, 'Top Rated', MovieCategory.topRated),
+            _buildCategorySection(context, 'Upcoming', MovieCategory.upcoming),
             const SizedBox(height: 16),
           ],
         ),

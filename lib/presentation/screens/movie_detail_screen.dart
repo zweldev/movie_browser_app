@@ -315,6 +315,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
   }
 
   Widget _buildFavoriteButton(MovieDetailState state) {
+    final colorScheme = Theme.of(context).colorScheme;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1.0, end: state.isFavorite ? 1.2 : 1.0),
       duration: const Duration(milliseconds: 200),
@@ -324,7 +325,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           scale: scale,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: colorScheme.surface.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: IconButton(

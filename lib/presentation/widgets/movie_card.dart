@@ -136,7 +136,7 @@ class MovieCard extends StatelessWidget {
                                   Text(
                                     movie.voteAverage.toStringAsFixed(1),
                                     style: const TextStyle(
-                                      color: Colors.grey,
+                                      color: Colors.white,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -158,7 +158,7 @@ class MovieCard extends StatelessWidget {
                               child: Text(
                                 movie.releaseYear,
                                 style: const TextStyle(
-                                  color: Colors.grey,
+                                  color: Colors.white,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),

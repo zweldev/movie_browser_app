@@ -167,7 +167,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
         if (movie == null) {
           return Scaffold(
             appBar: AppBar(),
-            body: const Center(child: Text('Movie not found')),
+            body: Center(
+              child: Text(
+                'Movie not found',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
           );
         }
         return FadeTransition(
@@ -182,7 +187,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => ImageViewerScreen(
-                            imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
+                            imageUrl:
+                                ApiConstants.getPosterUrl(movie.posterPath),
                             heroTag: 'movie_poster_${movie.id}',
                           ),
                         ),
@@ -262,7 +268,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           const SizedBox(height: 14),
                           Text(
                             movie.title,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -283,14 +292,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                             movie.overview.isNotEmpty
                                 ? movie.overview
                                 : 'No overview available.',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.82),
                                   height: 1.45,
                                 ),
                           ),
                           const SizedBox(height: 12),
-                          if (movie.releaseDate != null && movie.releaseDate!.isNotEmpty)
-                            _buildMetadataItem(Icons.calendar_today_outlined, movie.releaseYear),
+                          if (movie.releaseDate != null &&
+                              movie.releaseDate!.isNotEmpty)
+                            _buildMetadataItem(Icons.calendar_today_outlined,
+                                movie.releaseYear),
                         ],
                       ),
                     ),

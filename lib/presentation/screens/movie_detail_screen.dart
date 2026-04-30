@@ -71,7 +71,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return BlocBuilder<MovieDetailCubit, MovieDetailState>(
       builder: (context, state) {
@@ -184,7 +186,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
         return FadeTransition(
           opacity: _fadeAnimation,
           child: Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: colorScheme.surface,
             body: Stack(
               children: [
                 Positioned.fill(
@@ -207,7 +209,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                         fit: BoxFit.cover,
                         errorWidget: (context, url, error) => Container(
                           color: colorScheme.surfaceContainerHighest,
-                          child: const Icon(Icons.movie, size: 64),
+                          child: Icon(
+                            Icons.movie,
+                            size: 64,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ),
@@ -219,12 +225,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.25),
-                          Colors.black.withValues(alpha: 0.45),
-                          Colors.black.withValues(alpha: 0.75),
-                          Colors.black.withValues(alpha: 0.95),
-                        ],
+                        colors: isDark
+                            ? [
+                                Colors.black.withValues(alpha: 0.25),
+                                Colors.black.withValues(alpha: 0.45),
+                                Colors.black.withValues(alpha: 0.75),
+                                Colors.black.withValues(alpha: 0.95),
+                              ]
+                            : [
+                                Colors.black.withValues(alpha: 0.08),
+                                Colors.black.withValues(alpha: 0.12),
+                                Colors.black.withValues(alpha: 0.18),
+                                Colors.black.withValues(alpha: 0.26),
+                              ],
                         stops: const [0.0, 0.35, 0.65, 1.0],
                       ),
                     ),
@@ -241,6 +254,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                         _buildTopCircleButton(
                           icon: Icons.chevron_left_rounded,
                           onTap: () => Navigator.of(context).pop(),
+                          isDark: isDark,
                         ),
                         const Spacer(),
                         ThemeToggleButton(onPressed: widget.toggleTheme),
@@ -258,12 +272,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       minHeight: MediaQuery.of(context).size.height * 0.42,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.55),
+                      color: isDark
+                          ? Colors.black.withValues(alpha: 0.55)
+                          : colorScheme.surface.withValues(alpha: 0.95),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(28),
                       ),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.15),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.15)
+                            : colorScheme.outlineVariant.withValues(alpha: 0.7),
                         width: 0.7,
                       ),
                     ),
@@ -276,13 +294,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           const SizedBox(height: 14),
                           Text(
                             movie.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           if (movie.genreIds.isNotEmpty)
@@ -300,19 +315,21 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                             movie.overview.isNotEmpty
                                 ? movie.overview
                                 : 'No overview available.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.82),
-                                  height: 1.45,
-                                ),
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: colorScheme.onSurface.withValues(
+                                alpha: isDark ? 0.82 : 0.9,
+                              ),
+                              height: 1.45,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           if (movie.releaseDate != null &&
                               movie.releaseDate!.isNotEmpty)
-                            _buildMetadataItem(Icons.calendar_today_outlined,
-                                movie.releaseYear),
+                            _buildMetadataItem(
+                              Icons.calendar_today_outlined,
+                              movie.releaseYear,
+                              isDark: isDark,
+                            ),
                         ],
                       ),
                     ),
@@ -327,7 +344,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
   }
 
   Widget _buildFavoriteButton(MovieDetailState state) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1.0, end: state.isFavorite ? 1.2 : 1.0),
       duration: const Duration(milliseconds: 200),
@@ -337,13 +356,21 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           scale: scale,
           child: Container(
             decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: 0.3),
+              color: isDark
+                  ? colorScheme.surface.withValues(alpha: 0.3)
+                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
               shape: BoxShape.circle,
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : colorScheme.outlineVariant.withValues(alpha: 0.7),
+                width: 0.6,
+              ),
             ),
             child: IconButton(
               icon: Icon(
                 state.isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: state.isFavorite ? Colors.red : Colors.white,
+                color: state.isFavorite ? Colors.red : colorScheme.onSurface,
                 size: 28,
               ),
               onPressed: () {
@@ -357,7 +384,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
   }
 
   Widget _buildRatingRow(dynamic movie) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     return Row(
       children: [
         Container(
@@ -365,13 +395,20 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
-              colors: [
-                Colors.black.withValues(alpha: 0.7),
-                Colors.black.withValues(alpha: 0.45),
-              ],
+              colors: isDark
+                  ? [
+                      Colors.black.withValues(alpha: 0.7),
+                      Colors.black.withValues(alpha: 0.45),
+                    ]
+                  : [
+                      colorScheme.surfaceContainerHighest,
+                      colorScheme.surfaceContainer,
+                    ],
             ),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.22),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.22)
+                  : colorScheme.outlineVariant.withValues(alpha: 0.8),
               width: 0.7,
             ),
           ),
@@ -403,7 +440,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
         Text(
           movie.voteAverage.toStringAsFixed(1),
           style: textTheme.titleMedium?.copyWith(
-            color: Colors.white,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -418,15 +455,27 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     );
   }
 
-  Widget _buildMetadataItem(IconData icon, String text) {
+  Widget _buildMetadataItem(
+    IconData icon,
+    String text, {
+    required bool isDark,
+  }) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.white.withValues(alpha: 0.75)),
+        Icon(
+          icon,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface.withValues(
+                alpha: isDark ? 0.75 : 0.65,
+              ),
+        ),
         const SizedBox(width: 4),
         Text(
           text,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white.withValues(alpha: 0.75),
+                color: Theme.of(context).colorScheme.onSurface.withValues(
+                      alpha: isDark ? 0.75 : 0.65,
+                    ),
               ),
         ),
       ],
@@ -434,22 +483,30 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
   }
 
   Widget _buildGenreChip(String genre) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.08)
+            : colorScheme.surfaceContainerHighest.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.18),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.18)
+              : colorScheme.outlineVariant.withValues(alpha: 0.75),
           width: 0.6,
         ),
       ),
       child: Text(
         genre,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontWeight: FontWeight.w500,
-            ),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface.withValues(alpha: isDark ? 0.9 : 0.85),
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -457,21 +514,27 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
   Widget _buildTopCircleButton({
     required IconData icon,
     required VoidCallback onTap,
+    required bool isDark,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.4),
+        color: isDark
+            ? Colors.black.withValues(alpha: 0.4)
+            : colorScheme.surface.withValues(alpha: 0.95),
         shape: BoxShape.circle,
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.25),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.25)
+              : colorScheme.outlineVariant.withValues(alpha: 0.7),
           width: 0.6,
         ),
       ),
       child: IconButton(
         onPressed: onTap,
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon, color: colorScheme.onSurface),
         splashRadius: 20,
       ),
     );

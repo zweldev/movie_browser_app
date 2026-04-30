@@ -17,6 +17,7 @@ import 'presentation/cubit/search_cubit.dart';
 import 'presentation/screens/favorites_screen.dart';
 import 'presentation/screens/movie_list_screen.dart';
 import 'presentation/screens/search_screen.dart';
+import 'presentation/widgets/custom_bottom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,32 +105,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          if (index == 2) {
-            context.read<FavoritesCubit>().loadFavorites();
-          }
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.movie_outlined),
-            selectedIcon: Icon(Icons.movie),
-            label: 'Movies',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            selectedIcon: Icon(Icons.favorite),
-            label: 'Favorites',
+      body: Stack(
+        children: [
+          IndexedStack(index: _currentIndex, children: _screens),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: CustomBottomNavBar(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+                if (index == 2) {
+                  context.read<FavoritesCubit>().loadFavorites();
+                }
+              },
+            ),
           ),
         ],
       ),

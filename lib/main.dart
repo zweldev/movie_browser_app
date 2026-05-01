@@ -53,7 +53,7 @@ class MovieBrowserApp extends StatefulWidget {
 }
 
 class _MovieBrowserAppState extends State<MovieBrowserApp> {
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeMode.dark;
 
   void _toggleTheme() {
     setState(() {

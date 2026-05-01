@@ -13,6 +13,7 @@ import 'data/repositories/movie_repository_impl.dart';
 import 'domain/repositories/movie_repository.dart';
 import 'presentation/cubit/favorites_cubit.dart';
 import 'presentation/cubit/movie_detail_cubit.dart';
+import 'presentation/cubit/movie_grid_cubit.dart';
 import 'presentation/cubit/movie_list_cubit.dart';
 import 'presentation/cubit/search_cubit.dart';
 import 'presentation/screens/favorites_screen.dart';
@@ -76,6 +77,8 @@ class _MovieBrowserAppState extends State<MovieBrowserApp> {
         ),
         BlocProvider<SearchCubit>(
             create: (_) => SearchCubit(widget.movieRepository)),
+        BlocProvider<MovieGridCubit>(
+            create: (_) => MovieGridCubit(widget.movieRepository)),
       ],
       child: MaterialApp(
         title: AppConstants.appName,

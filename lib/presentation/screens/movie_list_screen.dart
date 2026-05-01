@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import '../widgets/theme_toggle_button.dart';
 import '../cubit/movie_list_cubit.dart';
+import '../cubit/movie_grid_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/error_widget.dart';
 import '../widgets/horizontal_shimmer_loading.dart';
 import 'movie_detail_screen.dart';
+import 'movie_grid_screen.dart';
 
 class MovieListScreen extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -76,12 +78,27 @@ class _MovieListScreenState extends State<MovieListScreen> {
     );
   }
 
+  void _navigateToGrid(MovieCategory category) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: context.read<MovieGridCubit>(),
+          child: MovieGridScreen(
+            category: category,
+            toggleTheme: widget.toggleTheme,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSectionHeader(
     BuildContext context,
     String title,
     bool isLoading,
-    bool isEmpty,
-  ) {
+    bool isEmpty, {
+    VoidCallback? onSeeAll,
+  }) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 600;
     final spacing = isSmallScreen ? 12.0 : 16.0;
@@ -95,15 +112,39 @@ class _MovieListScreenState extends State<MovieListScreen> {
         spacing + 4,
         isSmallScreen ? 8 : 12,
       ),
-      child: isLoading && isEmpty
-          ? _buildShimmerHeader(headerHeight, 100)
-          : Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: isLoading && isEmpty
+                ? _buildShimmerHeader(headerHeight, 100)
+                : Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize,
+                        ),
                   ),
+          ),
+          if (onSeeAll != null && !isLoading)
+            TextButton(
+              onPressed: onSeeAll,
+              style: TextButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'See All',
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 14 : 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
+        ],
+      ),
     );
   }
 
@@ -175,7 +216,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
       height: height,
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (notification is ScrollEndNotification && notification.metrics.extentAfter < 200) {
+          if (notification is ScrollEndNotification &&
+              notification.metrics.extentAfter < 200) {
             context.read<MovieListCubit>().loadMoreMovies(category);
           }
           return false;
@@ -210,7 +252,13 @@ class _MovieListScreenState extends State<MovieListScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context, 'Popular', state.isLoading, movies.isEmpty),
+            _buildSectionHeader(
+              context,
+              'Popular',
+              state.isLoading,
+              movies.isEmpty,
+              onSeeAll: () => _navigateToGrid(MovieCategory.popular),
+            ),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(
                 height: height,
@@ -237,7 +285,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
     );
   }
 
-  Widget _buildErrorWidget(String error, MovieCategory category, double height) {
+  Widget _buildErrorWidget(
+      String error, MovieCategory category, double height) {
     return SizedBox(
       height: height,
       child: Center(
@@ -281,14 +330,21 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     ? 3
                     : 4;
         final spacing = screenWidth < 600 ? 12.0 : 16.0;
-        final cardWidth = (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
+        final cardWidth =
+            (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
         final childAspectRatio = screenWidth < 600 ? 0.65 : 0.7;
         final sectionHeight = cardWidth / childAspectRatio;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context, title, state.isLoading, movies.isEmpty),
+            _buildSectionHeader(
+              context,
+              title,
+              state.isLoading,
+              movies.isEmpty,
+              onSeeAll: () => _navigateToGrid(category),
+            ),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(
                 height: sectionHeight,
@@ -324,9 +380,12 @@ class _MovieListScreenState extends State<MovieListScreen> {
             onRefresh: _refreshAll,
             child: ListView(
               children: [
+                const SizedBox(height: 60),
                 _buildPopularSection(context),
-                _buildCategorySection(context, 'Top Rated', MovieCategory.topRated),
-                _buildCategorySection(context, 'Upcoming', MovieCategory.upcoming),
+                _buildCategorySection(
+                    context, 'Top Rated', MovieCategory.topRated),
+                _buildCategorySection(
+                    context, 'Upcoming', MovieCategory.upcoming),
                 const SizedBox(height: 60),
               ],
             ),

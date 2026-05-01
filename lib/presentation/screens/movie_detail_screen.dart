@@ -79,86 +79,174 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     return BlocBuilder<MovieDetailCubit, MovieDetailState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: Shimmer.fromColors(
-              baseColor: colorScheme.surfaceContainerHighest,
-              highlightColor: colorScheme.surface,
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 400,
-                      width: double.infinity,
-                      color: colorScheme.surface,
+          return Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.42,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.55)
+                        : colorScheme.surface.withValues(alpha: 0.95),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(28),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.15)
+                          : colorScheme.outlineVariant.withValues(alpha: 0.7),
+                      width: 0.7,
+                    ),
+                  ),
+                  child: Shimmer.fromColors(
+                    baseColor: colorScheme.surfaceContainerHighest,
+                    highlightColor: colorScheme.surface,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 24,
-                            width: 200,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * .6,
+                            margin: const EdgeInsets.only(right: 10),
+                            child: Shimmer.fromColors(
+                              baseColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
+                              highlightColor:
+                                  Theme.of(context).colorScheme.surface,
+                              child: Card(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Container(color: Colors.white)),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 14,
+                                          width: double.infinity,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Container(
+                                            height: 12,
+                                            width: 60,
+                                            color: Colors.white),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  color: Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 18,
+                                      height: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Container(
+                                      width: 30,
+                                      height: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Container(
+                                width: 60,
+                                height: 16,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          Container(
+                            height: 28,
+                            width: 250,
                             decoration: BoxDecoration(
-                              color: colorScheme.surface,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: List.generate(
+                              3,
+                              (index) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 9,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(26),
+                                ),
+                                child: Container(
+                                  width: 50 + (index * 20),
+                                  height: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 16),
                           Container(
                             height: 16,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Container(
-                            height: 20,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                            width: double.infinity,
+                            color: Colors.white,
                           ),
                           const SizedBox(height: 8),
                           Container(
                             height: 16,
                             width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                            color: Colors.white,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 8),
                           Container(
                             height: 16,
                             width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                            color: Colors.white,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 8),
                           Container(
                             height: 16,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            color: Colors.white,
                           ),
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           );
         }
         if (state.error != null) {
@@ -208,12 +296,26 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       child: CachedNetworkImage(
                         imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
                         fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Container(
-                          color: colorScheme.surfaceContainerHighest,
-                          child: Icon(
-                            Icons.movie,
-                            size: 64,
-                            color: colorScheme.onSurfaceVariant,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: colorScheme.surfaceContainerHighest,
+                          highlightColor: colorScheme.surface,
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: colorScheme.surfaceContainerHighest,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            Shimmer.fromColors(
+                          baseColor: colorScheme.surfaceContainerHighest,
+                          highlightColor: colorScheme.surface,
+                          child: Container(
+                            color: colorScheme.surfaceContainerHighest,
+                            child: Icon(
+                              Icons.movie,
+                              size: 64,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       ),
@@ -367,10 +469,24 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     );
   }
 
+  ({Color background, Color border}) _getCircleColors(
+      bool isDark, ColorScheme colorScheme) {
+    return (
+      background: isDark
+          ? colorScheme.surface.withValues(alpha: 0.3)
+          : colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
+      border: isDark
+          ? Colors.white.withValues(alpha: 0.2)
+          : colorScheme.outlineVariant.withValues(alpha: 0.7),
+    );
+  }
+
   Widget _buildFavoriteButton(MovieDetailState state) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final colors = _getCircleColors(isDark, colorScheme);
+
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1.0, end: state.isFavorite ? 1.2 : 1.0),
       duration: const Duration(milliseconds: 200),
@@ -380,16 +496,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           scale: scale,
           child: Container(
             decoration: BoxDecoration(
-              color: isDark
-                  ? colorScheme.surface.withValues(alpha: 0.3)
-                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
+              color: colors.background,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.2)
-                    : colorScheme.outlineVariant.withValues(alpha: 0.7),
-                width: 0.6,
-              ),
+              border: Border.all(color: colors.border, width: 0.6),
             ),
             child: IconButton(
               icon: Icon(
@@ -407,11 +516,30 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     );
   }
 
+  ({Color gradientStart, Color gradientEnd, Color border}) _getRatingColors(
+    bool isDark,
+    ColorScheme colorScheme,
+  ) {
+    return (
+      gradientStart: isDark
+          ? Colors.black.withValues(alpha: 0.7)
+          : colorScheme.surfaceContainerHighest,
+      gradientEnd: isDark
+          ? Colors.black.withValues(alpha: 0.45)
+          : colorScheme.surfaceContainer,
+      border: isDark
+          ? Colors.white.withValues(alpha: 0.22)
+          : colorScheme.outlineVariant.withValues(alpha: 0.8),
+    );
+  }
+
   Widget _buildRatingRow(dynamic movie) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final colors = _getRatingColors(isDark, colorScheme);
+
     return Row(
       children: [
         Container(
@@ -419,22 +547,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
-              colors: isDark
-                  ? [
-                      Colors.black.withValues(alpha: 0.7),
-                      Colors.black.withValues(alpha: 0.45),
-                    ]
-                  : [
-                      colorScheme.surfaceContainerHighest,
-                      colorScheme.surfaceContainer,
-                    ],
+              colors: [colors.gradientStart, colors.gradientEnd],
             ),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.22)
-                  : colorScheme.outlineVariant.withValues(alpha: 0.8),
-              width: 0.7,
-            ),
+            border: Border.all(color: colors.border, width: 0.7),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -462,30 +577,44 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     );
   }
 
+  Color _getMetadataColor(bool isDark) {
+    return Theme.of(context).colorScheme.onSurface.withValues(
+          alpha: isDark ? 0.75 : 0.65,
+        );
+  }
+
   Widget _buildMetadataItem(
     IconData icon,
     String text, {
     required bool isDark,
   }) {
+    final color = _getMetadataColor(isDark);
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Theme.of(context).colorScheme.onSurface.withValues(
-                alpha: isDark ? 0.75 : 0.65,
-              ),
-        ),
+        Icon(icon, size: 16, color: color),
         const SizedBox(width: 4),
         Text(
           text,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(
-                      alpha: isDark ? 0.75 : 0.65,
-                    ),
-              ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
         ),
       ],
+    );
+  }
+
+  ({Color background, Color border, Color textColor}) _getGenreColors(
+    bool isDark,
+    ColorScheme colorScheme,
+  ) {
+    return (
+      background: isDark
+          ? Colors.white.withValues(alpha: 0.08)
+          : colorScheme.surfaceContainerHighest.withValues(alpha: 0.95),
+      border: isDark
+          ? Colors.white.withValues(alpha: 0.18)
+          : colorScheme.outlineVariant.withValues(alpha: 0.75),
+      textColor: colorScheme.onSurface.withValues(
+        alpha: isDark ? 0.9 : 0.85,
+      ),
     );
   }
 
@@ -493,28 +622,36 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final colors = _getGenreColors(isDark, colorScheme);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : colorScheme.surfaceContainerHighest.withValues(alpha: 0.95),
+        color: colors.background,
         borderRadius: BorderRadius.circular(26),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.18)
-              : colorScheme.outlineVariant.withValues(alpha: 0.75),
-          width: 0.6,
-        ),
+        border: Border.all(color: colors.border, width: 0.6),
       ),
       child: Text(
         genre,
         style: theme.textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onSurface.withValues(alpha: isDark ? 0.9 : 0.85),
+          color: colors.textColor,
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  ({Color background, Color border}) _getTopCircleColors(
+    bool isDark,
+    ColorScheme colorScheme,
+  ) {
+    return (
+      background: isDark
+          ? Colors.black.withValues(alpha: 0.4)
+          : colorScheme.surface.withValues(alpha: 0.95),
+      border: isDark
+          ? Colors.white.withValues(alpha: 0.25)
+          : colorScheme.outlineVariant.withValues(alpha: 0.7),
     );
   }
 
@@ -524,20 +661,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     required bool isDark,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
+    final colors = _getTopCircleColors(isDark, colorScheme);
+
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.black.withValues(alpha: 0.4)
-            : colorScheme.surface.withValues(alpha: 0.95),
+        color: colors.background,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.25)
-              : colorScheme.outlineVariant.withValues(alpha: 0.7),
-          width: 0.6,
-        ),
+        border: Border.all(color: colors.border, width: 0.6),
       ),
       child: IconButton(
         onPressed: onTap,

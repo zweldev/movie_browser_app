@@ -108,10 +108,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * .6,
-                          margin: const EdgeInsets.only(right: 10),
+                          height: MediaQuery.of(context).size.height * .7,
                           child: Shimmer.fromColors(
                             baseColor: Theme.of(context)
                                 .colorScheme

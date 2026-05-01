@@ -122,6 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         actions: [
           ThemeToggleButton(onPressed: widget.toggleTheme),
+          const SizedBox(width: 16)
         ],
       ),
       body: BlocBuilder<SearchCubit, SearchState>(

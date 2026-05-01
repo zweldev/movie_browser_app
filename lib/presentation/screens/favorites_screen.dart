@@ -54,6 +54,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         title: const Text('Favorites'),
         actions: [
           ThemeToggleButton(onPressed: widget.toggleTheme),
+          const SizedBox(width: 16)
         ],
       ),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(

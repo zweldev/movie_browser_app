@@ -7,6 +7,7 @@ import '../../domain/entities/movie.dart';
 import '../../presentation/cubit/movie_list_cubit.dart';
 import '../../presentation/screens/movie_detail_screen.dart';
 import '../../presentation/widgets/error_widget.dart';
+import '../../presentation/widgets/loading_animation.dart';
 import '../cubit/movie_grid_cubit.dart';
 
 class MovieGridScreen extends StatefulWidget {
@@ -221,15 +222,8 @@ class _GridMovieCard extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: colorScheme.surfaceContainerHighest,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ),
+                    placeholder: (context, url) =>
+                        const LoadingAnimation(size: 80),
                     errorWidget: (context, url, error) => Container(
                       color: colorScheme.surfaceContainerHighest,
                       child: Icon(

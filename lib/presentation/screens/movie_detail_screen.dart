@@ -48,6 +48,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  bool _isDescriptionExpanded = false;
 
   @override
   void initState() {
@@ -302,25 +303,56 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           const SizedBox(height: 16),
                           if (movie.genreIds.isNotEmpty)
                             Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: movie.genreIds
-                              .map((id) => _genreMap[id])
-                              .where((genre) => genre != null)
-                              .map((genre) => _buildGenreChip(genre!))
-                              .toList(),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            movie.overview.isNotEmpty
-                                ? movie.overview
-                                : 'No overview available.',
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              color: colorScheme.onSurface.withValues(
-                                alpha: isDark ? 0.82 : 0.9,
-                              ),
-                              height: 1.45,
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: movie.genreIds
+                                  .map((id) => _genreMap[id])
+                                  .where((genre) => genre != null)
+                                  .map((genre) => _buildGenreChip(genre!))
+                                  .toList(),
                             ),
+                          const SizedBox(height: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                movie.overview.isNotEmpty
+                                    ? movie.overview
+                                    : 'No overview available.',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: isDark ? 0.82 : 0.9,
+                                  ),
+                                  height: 1.45,
+                                ),
+                                maxLines: _isDescriptionExpanded ? null : 5,
+                                overflow: _isDescriptionExpanded
+                                    ? null
+                                    : TextOverflow.ellipsis,
+                              ),
+                              if (movie.overview.length > 300)
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isDescriptionExpanded =
+                                          !_isDescriptionExpanded;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      _isDescriptionExpanded
+                                          ? 'Read less'
+                                          : 'Read more',
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        color: colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ],
                       ),
@@ -398,7 +430,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                     ],
             ),
             border: Border.all(
-              color: isDark ? Colors.white.withValues(alpha: 0.22) : colorScheme.outlineVariant.withValues(alpha: 0.8),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.22)
+                  : colorScheme.outlineVariant.withValues(alpha: 0.8),
               width: 0.7,
             ),
           ),

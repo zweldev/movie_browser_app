@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import '../widgets/theme_toggle_button.dart';
 import '../cubit/movie_list_cubit.dart';
 import '../widgets/movie_card.dart';
@@ -95,13 +96,24 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 spacing + 4,
                 screenWidth < 600 ? 8 : 12,
               ),
-              child: Text(
-                'Popular',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenWidth < 600 ? 20 : 24,
+              child: state.isLoading && movies.isEmpty
+                  ? Shimmer.fromColors(
+                      baseColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      highlightColor: Theme.of(context).colorScheme.surface,
+                      child: Container(
+                        height: screenWidth < 600 ? 24 : 28,
+                        width: 100,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    )
+                  : Text(
+                      'Popular',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth < 600 ? 20 : 24,
+                          ),
                     ),
-              ),
             ),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(
@@ -219,13 +231,24 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 spacing + 4,
                 screenWidth < 600 ? 8 : 12,
               ),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenWidth < 600 ? 20 : 24,
+              child: state.isLoading && movies.isEmpty
+                  ? Shimmer.fromColors(
+                      baseColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      highlightColor: Theme.of(context).colorScheme.surface,
+                      child: Container(
+                        height: screenWidth < 600 ? 24 : 28,
+                        width: title.length * (screenWidth < 600 ? 10 : 12),
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    )
+                  : Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth < 600 ? 20 : 24,
+                          ),
                     ),
-              ),
             ),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(

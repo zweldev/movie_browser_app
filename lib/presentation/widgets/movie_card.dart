@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/constants.dart';
 import '../../domain/entities/movie.dart';
 import '../cubit/movie_list_cubit.dart';
+import 'loading_animation.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -59,15 +60,8 @@ class MovieCard extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: colorScheme.surfaceContainerHighest,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.primary,
-                          ),
-                        ),
-                      ),
+                      placeholder: (context, url) =>
+                          const LoadingAnimation(size: 80),
                       errorWidget: (context, url, error) => Container(
                         color: colorScheme.surfaceContainerHighest,
                         child: Icon(

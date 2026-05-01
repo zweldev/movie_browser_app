@@ -113,13 +113,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           height: MediaQuery.of(context).size.height * .6,
                           margin: const EdgeInsets.only(right: 10),
                           child: Shimmer.fromColors(
-                            baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                            highlightColor: Theme.of(context).colorScheme.surface,
+                            baseColor: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                            highlightColor:
+                                Theme.of(context).colorScheme.surface,
                             child: Card(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(child: Container(color: Colors.white)),
+                                  Expanded(
+                                      child: Container(color: Colors.white)),
                                 ],
                               ),
                             ),
@@ -314,16 +318,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                         end: Alignment.bottomCenter,
                         colors: isDark
                             ? [
-                                Colors.black.withValues(alpha: 0.25),
-                                Colors.black.withValues(alpha: 0.45),
-                                Colors.black.withValues(alpha: 0.75),
-                                Colors.black.withValues(alpha: 0.95),
+                                Colors.black.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.15),
+                                Colors.black.withValues(alpha: 0.35),
+                                Colors.black.withValues(alpha: 0.55),
                               ]
                             : [
-                                Colors.black.withValues(alpha: 0.08),
-                                Colors.black.withValues(alpha: 0.12),
-                                Colors.black.withValues(alpha: 0.18),
-                                Colors.black.withValues(alpha: 0.26),
+                                Colors.black.withValues(alpha: 0.02),
+                                Colors.black.withValues(alpha: 0.04),
+                                Colors.black.withValues(alpha: 0.06),
+                                Colors.black.withValues(alpha: 0.1),
                               ],
                         stops: const [0.0, 0.35, 0.65, 1.0],
                       ),
@@ -355,9 +359,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: double.infinity,
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height * 0.42,
-                    ),
                     decoration: BoxDecoration(
                       color: isDark
                           ? Colors.black.withValues(alpha: 0.55)

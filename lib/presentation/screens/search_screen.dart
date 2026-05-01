@@ -184,7 +184,8 @@ class _SearchScreenState extends State<SearchScreen> {
             );
           }
           return GridView.builder(
-            padding: EdgeInsets.all(spacing),
+            padding:
+                EdgeInsets.fromLTRB(spacing, spacing, spacing, spacing + 80),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               childAspectRatio: childAspectRatio,

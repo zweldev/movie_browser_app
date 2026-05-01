@@ -323,7 +323,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     context, 'Top Rated', MovieCategory.topRated),
                 _buildCategorySection(
                     context, 'Upcoming', MovieCategory.upcoming),
-                const SizedBox(height: 16),
+                 const SizedBox(height: 60),
               ],
             ),
           ),

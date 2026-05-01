@@ -100,7 +100,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             );
           }
           return GridView.builder(
-            padding: EdgeInsets.all(spacing),
+            padding:
+                EdgeInsets.fromLTRB(spacing, spacing, spacing, spacing + 80),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               childAspectRatio: childAspectRatio,

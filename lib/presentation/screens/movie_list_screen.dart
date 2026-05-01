@@ -4,6 +4,7 @@ import '../widgets/theme_toggle_button.dart';
 import '../cubit/movie_list_cubit.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/error_widget.dart';
+import '../widgets/horizontal_shimmer_loading.dart';
 import 'movie_detail_screen.dart';
 
 class MovieListScreen extends StatefulWidget {
@@ -103,11 +104,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
               ),
             ),
             if (state.isLoading && movies.isEmpty)
-              SizedBox(
+              HorizontalShimmerLoading(
                 height: popularCardHeight,
-                child: const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
+                itemWidth: screenWidth - (spacing * 2),
+                spacing: spacing,
               )
             else if (state.error != null && movies.isEmpty)
               SizedBox(
@@ -228,11 +228,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
               ),
             ),
             if (state.isLoading && movies.isEmpty)
-              SizedBox(
+              HorizontalShimmerLoading(
                 height: sectionHeight,
-                child: const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
+                itemWidth: cardWidth,
+                spacing: spacing,
               )
             else if (state.error != null && movies.isEmpty)
               SizedBox(
@@ -281,7 +280,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                             child: SizedBox(
                               width: screenWidth < 600 ? 16 : 20,
                               height: screenWidth < 600 ? 16 : 20,
-                              child: CircularProgressIndicator(
+                              child: const CircularProgressIndicator(
                                 strokeWidth: 2,
                               ),
                             ),
@@ -323,7 +322,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     context, 'Top Rated', MovieCategory.topRated),
                 _buildCategorySection(
                     context, 'Upcoming', MovieCategory.upcoming),
-                 const SizedBox(height: 60),
+                const SizedBox(height: 60),
               ],
             ),
           ),

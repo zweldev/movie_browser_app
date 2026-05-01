@@ -105,143 +105,127 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                   child: Shimmer.fromColors(
                     baseColor: colorScheme.surfaceContainerHighest,
                     highlightColor: colorScheme.surface,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .6,
-                            margin: const EdgeInsets.only(right: 10),
-                            child: Shimmer.fromColors(
-                              baseColor: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHighest,
-                              highlightColor:
-                                  Theme.of(context).colorScheme.surface,
-                              child: Card(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(color: Colors.white)),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 14,
-                                          width: double.infinity,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Container(
-                                            height: 12,
-                                            width: 60,
-                                            color: Colors.white),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * .6,
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Shimmer.fromColors(
+                            baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            highlightColor: Theme.of(context).colorScheme.surface,
+                            child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(child: Container(color: Colors.white)),
+                                ],
                               ),
                             ),
                           ),
-                          const SizedBox(height: 14),
-                          Row(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 18,
+                                          height: 18,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Container(
+                                          width: 30,
+                                          height: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Container(
+                                    width: 60,
+                                    height: 16,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
+                                height: 28,
+                                width: 250,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
                                   color: Colors.white,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 18,
-                                      height: 18,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Container(
-                                      width: 30,
-                                      height: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(height: 16),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: List.generate(
+                                  3,
+                                  (index) => Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 18,
+                                      vertical: 9,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                    child: Container(
+                                      width: 50 + (index * 20),
+                                      height: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
                               Container(
-                                width: 60,
                                 height: 16,
+                                width: double.infinity,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                height: 16,
+                                width: double.infinity,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                height: 16,
+                                width: double.infinity,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                height: 16,
+                                width: MediaQuery.of(context).size.width * 0.6,
                                 color: Colors.white,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 14),
-                          Container(
-                            height: 28,
-                            width: 250,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: List.generate(
-                              3,
-                              (index) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 18,
-                                  vertical: 9,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(26),
-                                ),
-                                child: Container(
-                                  width: 50 + (index * 20),
-                                  height: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            height: 16,
-                            width: double.infinity,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 16,
-                            width: double.infinity,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 16,
-                            width: double.infinity,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            height: 16,
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

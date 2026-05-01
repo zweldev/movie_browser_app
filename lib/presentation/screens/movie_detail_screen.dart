@@ -302,14 +302,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           const SizedBox(height: 16),
                           if (movie.genreIds.isNotEmpty)
                             Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: movie.genreIds
-                                  .map((id) => _genreMap[id])
-                                  .where((genre) => genre != null)
-                                  .map((genre) => _buildGenreChip(genre!))
-                                  .toList(),
-                            ),
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: movie.genreIds
+                              .map((id) => _genreMap[id])
+                              .where((genre) => genre != null)
+                              .map((genre) => _buildGenreChip(genre!))
+                              .toList(),
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             movie.overview.isNotEmpty
@@ -322,14 +322,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                               height: 1.45,
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          if (movie.releaseDate != null &&
-                              movie.releaseDate!.isNotEmpty)
-                            _buildMetadataItem(
-                              Icons.calendar_today_outlined,
-                              movie.releaseYear,
-                              isDark: isDark,
-                            ),
                         ],
                       ),
                     ),
@@ -406,28 +398,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                     ],
             ),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.22)
-                  : colorScheme.outlineVariant.withValues(alpha: 0.8),
+              color: isDark ? Colors.white.withValues(alpha: 0.22) : colorScheme.outlineVariant.withValues(alpha: 0.8),
               width: 0.7,
             ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'IMDb',
-                style: textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.9),
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.4,
-                ),
-              ),
-              const SizedBox(width: 5),
+              Icon(Icons.star_rounded, size: 18, color: Colors.amber[500]),
+              const SizedBox(width: 4),
               Text(
                 movie.voteAverage.toStringAsFixed(1),
-                style: textTheme.bodySmall?.copyWith(
-                  color: Colors.amber[500],
+                style: textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -435,22 +418,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
           ),
         ),
         const SizedBox(width: 10),
-        Icon(Icons.star_rounded, size: 18, color: Colors.amber[500]),
-        const SizedBox(width: 4),
-        Text(
-          movie.voteAverage.toStringAsFixed(1),
-          style: textTheme.titleMedium?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.w700,
+        if (movie.releaseDate != null && movie.releaseDate!.isNotEmpty)
+          _buildMetadataItem(
+            Icons.calendar_today_outlined,
+            movie.releaseYear,
+            isDark: isDark,
           ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          '(${movie.voteCount} reviews)',
-          style: textTheme.bodyMedium?.copyWith(
-            color: Colors.white.withValues(alpha: 0.75),
-          ),
-        ),
       ],
     );
   }

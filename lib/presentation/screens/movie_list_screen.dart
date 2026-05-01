@@ -104,7 +104,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       child: Container(
                         height: screenWidth < 600 ? 24 : 28,
                         width: 100,
-                        color: Theme.of(context).colorScheme.surface,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     )
                   : Text(
@@ -239,7 +242,10 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       child: Container(
                         height: screenWidth < 600 ? 24 : 28,
                         width: title.length * (screenWidth < 600 ? 10 : 12),
-                        color: Theme.of(context).colorScheme.surface,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     )
                   : Text(

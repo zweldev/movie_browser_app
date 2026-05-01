@@ -20,6 +20,26 @@ class ConnectionTimeoutException extends CustomException {
   ConnectionTimeoutException() : super("Connection Timeout!");
 }
 
+class BadRequestException extends CustomException {
+  BadRequestException() : super("Bad request");
+}
+
+class UnauthorizedException extends CustomException {
+  UnauthorizedException() : super("Unauthorized");
+}
+
+class ForbiddenException extends CustomException {
+  ForbiddenException() : super("Forbidden");
+}
+
+class NotFoundException extends CustomException {
+  NotFoundException() : super("Not found");
+}
+
+class TooManyRequestsException extends CustomException {
+  TooManyRequestsException() : super("Too many requests");
+}
+
 class CustomResponse {
   final dynamic data;
   final int statusCode;

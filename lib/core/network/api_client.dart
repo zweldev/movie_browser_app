@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../constants/constants.dart';
 import 'network_exceptions.dart';
 
@@ -25,7 +27,8 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          options.queryParameters['api_key'] = dotenv.env['TMDB_API_KEY']; //! TO CHECK
+          options.queryParameters['api_key'] =
+              dotenv.env['TMDB_API_KEY'];
           return handler.next(options);
         },
         onError: (error, handler) {
@@ -57,43 +60,94 @@ class ApiClient {
       );
 
       return _handleResponse(customResponse);
-    } on TimeoutException catch (_) {
+    }
+
+    on TimeoutException {
       throw ConnectionTimeoutException();
-    } on SocketException catch (_) {
+    } on SocketException {
       throw NoInternetConnectionException();
-    } on DioException catch (dioException) {
-      if (dioException.type == DioExceptionType.connectionTimeout ||
-          dioException.type == DioExceptionType.sendTimeout ||
-          dioException.type == DioExceptionType.receiveTimeout) {
-        throw ConnectionTimeoutException();
-      } else if (dioException.type == DioExceptionType.badResponse) {
-        throw CustomException(
-          dioException.message ?? 'Request failed',
-          statusCode: dioException.response?.statusCode,
-        );
-      } else if (dioException.type == DioExceptionType.connectionError) {
-        throw NoInternetConnectionException();
-      } else {
-        throw CustomException(
-          dioException.message ?? 'Something went wrong',
-          statusCode: dioException.response?.statusCode,
-        );
-      }
-    } catch (_) {
+    }
+
+    on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+
+    catch (e, stackTrace) {
+      log('Unexpected error: $e', stackTrace: stackTrace);
       throw CustomException("An unexpected error occurred");
     }
   }
 
   CustomResponse _handleResponse(CustomResponse response) {
-    if (response.statusCode.toString().startsWith('2')) {
+    final statusCode = response.statusCode;
+
+    if (statusCode >= 200 && statusCode < 300) {
       return response;
-    } else if (response.statusCode == 500) {
-      throw InternalServerErrorException();
-    } else {
-      throw CustomException(
-        response.data.toString(),
-        statusCode: response.statusCode,
-      );
+    }
+
+    throw _mapStatusCodeToException(statusCode, response.data);
+  }
+
+  Exception _mapStatusCodeToException(int statusCode, dynamic data) {
+    switch (statusCode) {
+      case 400:
+        return BadRequestException();
+
+      case 401:
+        return UnauthorizedException();
+
+      case 403:
+        return ForbiddenException();
+
+      case 404:
+        return NotFoundException();
+
+      case 408:
+        return ConnectionTimeoutException();
+
+      case 429:
+        return TooManyRequestsException();
+
+      case 500:
+      case 502:
+      case 503:
+      case 504:
+        return InternalServerErrorException();
+
+      default:
+        return CustomException(
+          "Unexpected error occurred",
+          statusCode: statusCode,
+        );
+    }
+  }
+
+  Exception _handleDioException(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return ConnectionTimeoutException();
+
+      case DioExceptionType.connectionError:
+        return NoInternetConnectionException();
+
+      case DioExceptionType.badResponse:
+        final statusCode = e.response?.statusCode ?? 500;
+        return _mapStatusCodeToException(
+          statusCode,
+          e.response?.data,
+        );
+
+      case DioExceptionType.cancel:
+        return CustomException("Request was cancelled");
+
+      case DioExceptionType.unknown:
+      default:
+        return CustomException(
+          e.message ?? "Something went wrong",
+          statusCode: e.response?.statusCode,
+        );
     }
   }
 }

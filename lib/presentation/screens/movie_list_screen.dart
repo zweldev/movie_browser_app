@@ -83,16 +83,17 @@ class _MovieListScreenState extends State<MovieListScreen> {
     bool isEmpty,
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final spacing = screenWidth < 600 ? 12.0 : 16.0;
-    final headerHeight = screenWidth < 600 ? 24.0 : 28.0;
-    final fontSize = screenWidth < 600 ? 20.0 : 24.0;
+    final isSmallScreen = screenWidth < 600;
+    final spacing = isSmallScreen ? 12.0 : 16.0;
+    final headerHeight = isSmallScreen ? 24.0 : 28.0;
+    final fontSize = isSmallScreen ? 20.0 : 24.0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
         spacing + 4,
-        screenWidth < 600 ? 16 : 24,
+        isSmallScreen ? 16 : 24,
         spacing + 4,
-        screenWidth < 600 ? 8 : 12,
+        isSmallScreen ? 8 : 12,
       ),
       child: isLoading && isEmpty
           ? _buildShimmerHeader(headerHeight, 100)
@@ -123,12 +124,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   Widget _buildLoadingMoreIndicator(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+
     return SizedBox(
-      width: screenWidth < 600 ? 40 : 60,
+      width: isSmallScreen ? 40 : 60,
       child: Center(
         child: SizedBox(
-          width: screenWidth < 600 ? 16 : 20,
-          height: screenWidth < 600 ? 16 : 20,
+          width: isSmallScreen ? 16 : 20,
+          height: isSmallScreen ? 16 : 20,
           child: const CircularProgressIndicator(strokeWidth: 2),
         ),
       ),
@@ -172,8 +175,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
       height: height,
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (notification is ScrollEndNotification &&
-              notification.metrics.extentAfter < 200) {
+          if (notification is ScrollEndNotification && notification.metrics.extentAfter < 200) {
             context.read<MovieListCubit>().loadMoreMovies(category);
           }
           return false;
@@ -208,8 +210,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(
-                context, 'Popular', state.isLoading, movies.isEmpty),
+            _buildSectionHeader(context, 'Popular', state.isLoading, movies.isEmpty),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(
                 height: height,
@@ -236,8 +237,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
     );
   }
 
-  Widget _buildErrorWidget(
-      String error, MovieCategory category, double height) {
+  Widget _buildErrorWidget(String error, MovieCategory category, double height) {
     return SizedBox(
       height: height,
       child: Center(
@@ -281,16 +281,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     ? 3
                     : 4;
         final spacing = screenWidth < 600 ? 12.0 : 16.0;
-        final cardWidth =
-            (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
+        final cardWidth = (screenWidth - spacing * (crossAxisCount + 1)) / crossAxisCount;
         final childAspectRatio = screenWidth < 600 ? 0.65 : 0.7;
         final sectionHeight = cardWidth / childAspectRatio;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(
-                context, title, state.isLoading, movies.isEmpty),
+            _buildSectionHeader(context, title, state.isLoading, movies.isEmpty),
             if (state.isLoading && movies.isEmpty)
               HorizontalShimmerLoading(
                 height: sectionHeight,
@@ -327,10 +325,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
             child: ListView(
               children: [
                 _buildPopularSection(context),
-                _buildCategorySection(
-                    context, 'Top Rated', MovieCategory.topRated),
-                _buildCategorySection(
-                    context, 'Upcoming', MovieCategory.upcoming),
+                _buildCategorySection(context, 'Top Rated', MovieCategory.topRated),
+                _buildCategorySection(context, 'Upcoming', MovieCategory.upcoming),
                 const SizedBox(height: 60),
               ],
             ),

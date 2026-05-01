@@ -8,6 +8,7 @@ import '../../presentation/cubit/movie_list_cubit.dart';
 import '../../presentation/screens/movie_detail_screen.dart';
 import '../../presentation/widgets/error_widget.dart';
 import '../../presentation/widgets/loading_animation.dart';
+import '../../presentation/widgets/theme_toggle_button.dart';
 import '../cubit/movie_grid_cubit.dart';
 
 class MovieGridScreen extends StatefulWidget {
@@ -71,17 +72,12 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
         actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: widget.toggleTheme,
-          ),
+          ThemeToggleButton(onPressed: widget.toggleTheme),
+          const SizedBox(width: 16),
         ],
       ),
       body: BlocBuilder<MovieGridCubit, MovieGridState>(

@@ -117,15 +117,28 @@ class _HomeScreenState extends State<HomeScreen> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: CustomBottomNavBar(
-              selectedIndex: _currentIndex,
-              onDestinationSelected: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                if (index == 2) {
-                  context.read<FavoritesCubit>().loadFavorites();
-                }
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 600;
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    width: isWide
+                        ? constraints.maxWidth * 0.5
+                        : constraints.maxWidth,
+                    child: CustomBottomNavBar(
+                      selectedIndex: _currentIndex,
+                      onDestinationSelected: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                        if (index == 2) {
+                          context.read<FavoritesCubit>().loadFavorites();
+                        }
+                      },
+                    ),
+                  ),
+                );
               },
             ),
           ),

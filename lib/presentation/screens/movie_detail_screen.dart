@@ -399,47 +399,65 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                                   .toList(),
                             ),
                           const SizedBox(height: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                movie.overview.isNotEmpty
-                                    ? movie.overview
-                                    : 'No overview available.',
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: colorScheme.onSurface.withValues(
-                                    alpha: isDark ? 0.82 : 0.9,
-                                  ),
-                                  height: 1.45,
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final overviewText = movie.overview.isNotEmpty
+                                  ? movie.overview
+                                  : 'No overview available.';
+                              final descriptionStyle =
+                                  theme.textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: isDark ? 0.82 : 0.9,
                                 ),
+                                height: 1.45,
+                              );
+                              final textPainter = TextPainter(
+                                text: TextSpan(
+                                    text: overviewText,
+                                    style: descriptionStyle),
                                 maxLines: _isDescriptionExpanded ? null : 5,
-                                overflow: _isDescriptionExpanded
-                                    ? null
-                                    : TextOverflow.ellipsis,
-                              ),
-                              if (movie.overview.length > 300)
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _isDescriptionExpanded =
-                                          !_isDescriptionExpanded;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      _isDescriptionExpanded
-                                          ? 'Read less'
-                                          : 'Read more',
-                                      style:
-                                          theme.textTheme.bodyMedium?.copyWith(
-                                        color: colorScheme.primary,
-                                        fontWeight: FontWeight.w600,
+                                textDirection: TextDirection.ltr,
+                              );
+                              textPainter.layout(
+                                  maxWidth: constraints.maxWidth);
+                              final isTruncated = textPainter.didExceedMaxLines;
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    overviewText,
+                                    style: descriptionStyle,
+                                    maxLines: _isDescriptionExpanded ? null : 5,
+                                    overflow: _isDescriptionExpanded
+                                        ? null
+                                        : TextOverflow.ellipsis,
+                                  ),
+                                  if (_isDescriptionExpanded || isTruncated)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _isDescriptionExpanded =
+                                              !_isDescriptionExpanded;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          _isDescriptionExpanded
+                                              ? 'Read less'
+                                              : 'Read more',
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            color: colorScheme.primary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                            ],
+                                ],
+                              );
+                            },
                           ),
                         ],
                       ),

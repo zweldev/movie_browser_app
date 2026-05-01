@@ -7,13 +7,13 @@ class AppTheme {
   static const ColorScheme darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
 
-    primary: Color(0xFF8B5CF6), // subtle purple accent
+    primary: Color(0xFF3B82F6), // subtle blue accent
     onPrimary: Colors.white,
 
-    secondary: Color(0xFF22C55E), // optional (rarely used)
+    secondary: Color(0xFF10B981),
     onSecondary: Colors.black,
 
-    surface: Color(0xFF0B0B0F), // main background (NOT pure black)
+    surface: Color(0xFF0B0B0F),
     onSurface: Color(0xFFE5E7EB),
 
     surfaceContainerHighest: Color(0xFF1A1A22),
@@ -24,9 +24,8 @@ class AppTheme {
     error: Color(0xFFEF4444),
     onError: Colors.white,
 
-    // Required but less used
-    primaryContainer: Color(0xFF1E1B4B),
-    onPrimaryContainer: Color(0xFFE0E7FF),
+    primaryContainer: Color(0xFF1E3A8A),
+    onPrimaryContainer: Color(0xFFDBEAFE),
 
     secondaryContainer: Color(0xFF052E16),
     onSecondaryContainer: Color(0xFFBBF7D0),
@@ -39,33 +38,23 @@ class AppTheme {
 
   static const ColorScheme lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-
-    primary: Color(0xFF6D28D9),
+    primary: Color(0xFF2563EB),
     onPrimary: Colors.white,
-
-    secondary: Color(0xFF16A34A),
+    secondary: Color(0xFF059669),
     onSecondary: Colors.white,
-
-    surface: Color(0xFFF8F9FB), // soft white (NOT pure white)
+    surface: Color(0xFFF8F9FB),
     onSurface: Color(0xFF0F172A),
-
     surfaceContainerHighest: Color(0xFFE5E7EB),
     onSurfaceVariant: Color(0xFF6B7280),
-
     outline: Color(0xFFD1D5DB),
-
     error: Color(0xFFDC2626),
     onError: Colors.white,
-
-    primaryContainer: Color(0xFFEDE9FE),
-    onPrimaryContainer: Color(0xFF2E1065),
-
+    primaryContainer: Color(0xFFEFF6FF),
+    onPrimaryContainer: Color(0xFF1E3A8A),
     secondaryContainer: Color(0xFFDCFCE7),
     onSecondaryContainer: Color(0xFF052E16),
-
     background: Color(0xFFF8F9FB),
     onBackground: Color(0xFF0F172A),
-
     surfaceVariant: Color(0xFFF1F5F9),
   );
 

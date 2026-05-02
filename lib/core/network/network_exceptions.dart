@@ -40,6 +40,22 @@ class TooManyRequestsException extends CustomException {
   TooManyRequestsException() : super("Too many requests");
 }
 
+class CacheException extends CustomException {
+  CacheException([super.message = "Cache error occurred"]);
+}
+
+class CacheReadException extends CacheException {
+  CacheReadException() : super("Failed to read local data");
+}
+
+class CacheWriteException extends CacheException {
+  CacheWriteException() : super("Failed to save data");
+}
+
+class CacheCorruptionException extends CacheException {
+  CacheCorruptionException() : super("Local data is corrupted");
+}
+
 class CustomResponse {
   final dynamic data;
   final int statusCode;

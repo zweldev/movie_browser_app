@@ -110,7 +110,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * .7,
+                          height: MediaQuery.of(context).size.height * .6,
                           child: Shimmer.fromColors(
                             baseColor: Theme.of(context)
                                 .colorScheme

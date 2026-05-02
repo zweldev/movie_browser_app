@@ -5,31 +5,6 @@ import '../../../domain/repositories/movie_repository.dart';
 
 enum MovieCategory { popular, topRated, upcoming }
 
-abstract class MovieListEvent extends Equatable {
-  const MovieListEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class LoadMovies extends MovieListEvent {
-  final MovieCategory category;
-  final bool refresh;
-
-  const LoadMovies({required this.category, this.refresh = false});
-
-  @override
-  List<Object?> get props => [category, refresh];
-}
-
-class LoadMoreMovies extends MovieListEvent {
-  final MovieCategory category;
-
-  const LoadMoreMovies({required this.category});
-
-  @override
-  List<Object?> get props => [category];
-}
-
 class MovieListState extends Equatable {
   final List<Movie> popularMovies;
   final List<Movie> topRatedMovies;

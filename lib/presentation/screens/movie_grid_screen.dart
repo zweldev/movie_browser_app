@@ -1,15 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../core/constants/constants.dart';
-import '../../domain/entities/movie.dart';
-import '../../presentation/cubit/movie_list_cubit.dart';
+import '../cubit/movie_list_cubit.dart';
+import '../cubit/movie_grid_cubit.dart';
 import '../../presentation/screens/movie_detail_screen.dart';
 import '../../presentation/widgets/error_widget.dart';
-import '../../presentation/widgets/loading_animation.dart';
+import '../../presentation/widgets/movie_card.dart';
 import '../../presentation/widgets/theme_toggle_button.dart';
-import '../cubit/movie_grid_cubit.dart';
 
 class MovieGridScreen extends StatefulWidget {
   final MovieCategory category;
@@ -73,8 +70,8 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
       appBar: AppBar(
         title: Text(_title),
         actions: const [
-           ThemeToggleButton(),
-           SizedBox(width: 16),
+          ThemeToggleButton(),
+          SizedBox(width: 16),
         ],
       ),
       body: BlocBuilder<MovieGridCubit, MovieGridState>(
@@ -117,7 +114,7 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
             itemCount: movies.length + (state.isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index >= movies.length) {
-                return Center(
+                return const Center(
                   child: SizedBox(
                     width: 20,
                     height: 20,
@@ -126,10 +123,11 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
                 );
               }
               final movie = movies[index];
-              return _GridMovieCard(
+              return MovieCard(
                 movie: movie,
                 index: index,
                 onTap: () => _navigateToDetail(movie.id),
+                category: widget.category,
               );
             },
           );
@@ -171,161 +169,6 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
           ),
         );
       },
-    );
-  }
-}
-
-class _GridMovieCard extends StatelessWidget {
-  final Movie movie;
-  final int index;
-  final VoidCallback onTap;
-
-  const _GridMovieCard({
-    required this.movie,
-    required this.index,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.shadow.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Material(
-            color: colorScheme.surface,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Hero(
-                  tag: 'movie_poster_${movie.id}_grid',
-                  child: CachedNetworkImage(
-                    imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const LoadingAnimation(size: 80),
-                    errorWidget: (context, url, error) => Container(
-                      color: colorScheme.surfaceContainerHighest,
-                      child: Icon(
-                        Icons.movie,
-                        size: 48,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 160,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0.8),
-                          Colors.black.withOpacity(0.95),
-                        ],
-                        stops: const [0.0, 0.4, 0.7, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 16,
-                  left: 12,
-                  right: 12,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.6),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  size: 14,
-                                  color: Colors.amber,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  movie.voteAverage.toStringAsFixed(1),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.6),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              movie.releaseYear,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        movie.title,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

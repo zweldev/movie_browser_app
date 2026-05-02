@@ -6,7 +6,6 @@ import '../../core/constants/constants.dart';
 import '../cubit/movie_detail_cubit.dart';
 import '../widgets/error_widget.dart';
 import '../widgets/theme_toggle_button.dart';
-import 'image_viewer_screen.dart';
 
 const Map<int, String> _genreMap = {
   28: 'Action',
@@ -264,43 +263,29 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
             body: Stack(
               children: [
                 Positioned.fill(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => ImageViewerScreen(
-                            imageUrl:
-                                ApiConstants.getPosterUrl(movie.posterPath),
-                            heroTag: 'movie_poster_${movie.id}',
-                          ),
+                  child: Hero(
+                    tag: 'movie_poster_${movie.id}',
+                    child: CachedNetworkImage(
+                      imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: colorScheme.surfaceContainerHighest,
+                        highlightColor: colorScheme.surface,
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: colorScheme.surfaceContainerHighest,
                         ),
-                      );
-                    },
-                    child: Hero(
-                      tag: 'movie_poster_${movie.id}',
-                      child: CachedNetworkImage(
-                        imageUrl: ApiConstants.getPosterUrl(movie.posterPath),
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: colorScheme.surfaceContainerHighest,
-                          highlightColor: colorScheme.surface,
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color: colorScheme.surfaceContainerHighest,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            Shimmer.fromColors(
-                          baseColor: colorScheme.surfaceContainerHighest,
-                          highlightColor: colorScheme.surface,
-                          child: Container(
-                            color: colorScheme.surfaceContainerHighest,
-                            child: Icon(
-                              Icons.movie,
-                              size: 64,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
+                      ),
+                      errorWidget: (context, url, error) => Shimmer.fromColors(
+                        baseColor: colorScheme.surfaceContainerHighest,
+                        highlightColor: colorScheme.surface,
+                        child: Container(
+                          color: colorScheme.surfaceContainerHighest,
+                          child: Icon(
+                            Icons.movie,
+                            size: 64,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),

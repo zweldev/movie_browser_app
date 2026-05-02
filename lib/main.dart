@@ -16,6 +16,7 @@ import 'presentation/cubit/movie_detail_cubit.dart';
 import 'presentation/cubit/movie_grid_cubit.dart';
 import 'presentation/cubit/movie_list_cubit.dart';
 import 'presentation/cubit/search_cubit.dart';
+import 'presentation/cubit/theme_cubit.dart';
 import 'presentation/screens/favorites_screen.dart';
 import 'presentation/screens/movie_list_screen.dart';
 import 'presentation/screens/search_screen.dart';
@@ -43,59 +44,47 @@ void main() async {
   runApp(MovieBrowserApp(movieRepository: movieRepository));
 }
 
-class MovieBrowserApp extends StatefulWidget {
+class MovieBrowserApp extends StatelessWidget {
   final MovieRepository movieRepository;
 
   const MovieBrowserApp({super.key, required this.movieRepository});
 
   @override
-  State<MovieBrowserApp> createState() => _MovieBrowserAppState();
-}
-
-class _MovieBrowserAppState extends State<MovieBrowserApp> {
-  ThemeMode _themeMode = ThemeMode.dark;
-
-  void _toggleTheme() {
-    setState(() {
-      _themeMode =
-          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
         BlocProvider<MovieListCubit>(
-          create: (_) => MovieListCubit(widget.movieRepository),
+          create: (_) => MovieListCubit(movieRepository),
         ),
         BlocProvider<MovieDetailCubit>(
-          create: (_) => MovieDetailCubit(widget.movieRepository),
+          create: (_) => MovieDetailCubit(movieRepository),
         ),
         BlocProvider<FavoritesCubit>(
-          create: (_) => FavoritesCubit(widget.movieRepository),
+          create: (_) => FavoritesCubit(movieRepository),
         ),
-        BlocProvider<SearchCubit>(
-            create: (_) => SearchCubit(widget.movieRepository)),
+        BlocProvider<SearchCubit>(create: (_) => SearchCubit(movieRepository)),
         BlocProvider<MovieGridCubit>(
-            create: (_) => MovieGridCubit(widget.movieRepository)),
+            create: (_) => MovieGridCubit(movieRepository)),
       ],
-      child: MaterialApp(
-        title: AppConstants.appName,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: _themeMode,
-        home: HomeScreen(toggleTheme: _toggleTheme),
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: AppConstants.appName,
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeMode,
+            home: const HomeScreen(),
+          );
+        },
       ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  final VoidCallback toggleTheme;
-
-  const HomeScreen({super.key, required this.toggleTheme});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -105,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   late final List<Widget> _screens = [
-    MovieListScreen(toggleTheme: widget.toggleTheme),
-    SearchScreen(toggleTheme: widget.toggleTheme),
-    FavoritesScreen(toggleTheme: widget.toggleTheme),
+    const MovieListScreen(),
+    const SearchScreen(),
+    const FavoritesScreen(),
   ];
 
   @override

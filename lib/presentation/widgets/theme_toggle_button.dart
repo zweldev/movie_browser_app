@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/theme_cubit.dart';
 
 class ThemeToggleButton extends StatefulWidget {
-  final VoidCallback onPressed;
-
-  const ThemeToggleButton({super.key, required this.onPressed});
+  const ThemeToggleButton({super.key});
 
   @override
   State<ThemeToggleButton> createState() => _ThemeToggleButtonState();
@@ -62,7 +62,7 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton>
       ),
       child: IconButton(
         onPressed: () {
-          widget.onPressed();
+          context.read<ThemeCubit>().toggleTheme();
           _controller.forward(from: 0.0);
         },
         icon: RotationTransition(

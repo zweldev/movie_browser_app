@@ -13,12 +13,10 @@ import '../cubit/movie_grid_cubit.dart';
 
 class MovieGridScreen extends StatefulWidget {
   final MovieCategory category;
-  final VoidCallback toggleTheme;
 
   const MovieGridScreen({
     super.key,
     required this.category,
-    required this.toggleTheme,
   });
 
   @override
@@ -64,7 +62,6 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
       MaterialPageRoute(
         builder: (_) => MovieDetailScreen(
           movieId: movieId,
-          toggleTheme: widget.toggleTheme,
         ),
       ),
     );
@@ -75,9 +72,9 @@ class _MovieGridScreenState extends State<MovieGridScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
-        actions: [
-          ThemeToggleButton(onPressed: widget.toggleTheme),
-          const SizedBox(width: 16),
+        actions: const [
+           ThemeToggleButton(),
+           SizedBox(width: 16),
         ],
       ),
       body: BlocBuilder<MovieGridCubit, MovieGridState>(

@@ -8,9 +8,7 @@ import '../widgets/error_widget.dart';
 import 'movie_detail_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  final VoidCallback toggleTheme;
-
-  const FavoritesScreen({super.key, required this.toggleTheme});
+  const FavoritesScreen({super.key});
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -52,10 +50,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorites'),
-        actions: [
-          ThemeToggleButton(onPressed: widget.toggleTheme),
-          const SizedBox(width: 16)
-        ],
+        actions: const [ ThemeToggleButton(),  SizedBox(width: 16)],
       ),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
@@ -160,7 +155,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return MovieDetailScreen(
             movieId: movieId,
-            toggleTheme: widget.toggleTheme,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

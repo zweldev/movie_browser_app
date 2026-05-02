@@ -11,9 +11,7 @@ import '../widgets/error_widget.dart';
 import 'movie_detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
-  final VoidCallback toggleTheme;
-
-  const SearchScreen({super.key, required this.toggleTheme});
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -46,7 +44,6 @@ class _SearchScreenState extends State<SearchScreen> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return MovieDetailScreen(
             movieId: movieId,
-            toggleTheme: widget.toggleTheme,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -119,10 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
         ),
-        actions: [
-          ThemeToggleButton(onPressed: widget.toggleTheme),
-          const SizedBox(width: 16)
-        ],
+        actions: const [ThemeToggleButton(), SizedBox(width: 16)],
       ),
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {

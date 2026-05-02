@@ -11,9 +11,7 @@ import 'movie_detail_screen.dart';
 import 'movie_grid_screen.dart';
 
 class MovieListScreen extends StatefulWidget {
-  final VoidCallback toggleTheme;
-
-  const MovieListScreen({super.key, required this.toggleTheme});
+  const MovieListScreen({super.key});
 
   @override
   State<MovieListScreen> createState() => _MovieListScreenState();
@@ -56,7 +54,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return MovieDetailScreen(
             movieId: movieId,
-            toggleTheme: widget.toggleTheme,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -85,7 +82,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
           value: context.read<MovieGridCubit>(),
           child: MovieGridScreen(
             category: category,
-            toggleTheme: widget.toggleTheme,
           ),
         ),
       ),
@@ -393,7 +389,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
             right: 16,
-            child: ThemeToggleButton(onPressed: widget.toggleTheme),
+            child: const ThemeToggleButton(),
           ),
         ],
       ),

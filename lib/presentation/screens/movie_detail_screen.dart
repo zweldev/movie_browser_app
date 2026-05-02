@@ -32,12 +32,10 @@ const Map<int, String> _genreMap = {
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
-  final VoidCallback toggleTheme;
 
   const MovieDetailScreen({
     super.key,
     required this.movieId,
-    required this.toggleTheme,
   });
 
   @override
@@ -347,7 +345,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
                           isDark: isDark,
                         ),
                         const Spacer(),
-                        ThemeToggleButton(onPressed: widget.toggleTheme),
+                        const ThemeToggleButton(),
                         const SizedBox(width: 8),
                         _buildFavoriteButton(state),
                       ],

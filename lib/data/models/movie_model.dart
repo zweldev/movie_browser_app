@@ -11,16 +11,16 @@ class MovieModel extends HiveObject {
   @HiveField(2)
   final String? posterPath;
 
-  @HiveField(4)
+  @HiveField(3)
   final String overview;
 
-  @HiveField(5)
+  @HiveField(4)
   final double voteAverage;
 
-  @HiveField(7)
+  @HiveField(5)
   final String? releaseDate;
 
-  @HiveField(8)
+  @HiveField(6)
   final List<int> genreIds;
 
   MovieModel({
@@ -108,10 +108,10 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       id: fields[0] as int,
       title: fields[1] as String,
       posterPath: fields[2] as String?,
-      overview: fields[4] as String,
-      voteAverage: fields[5] as double,
-      releaseDate: fields[7] as String?,
-      genreIds: (fields[8] as List).cast<int>(),
+      overview: fields[3] as String,
+      voteAverage: fields[4] as double,
+      releaseDate: fields[5] as String?,
+      genreIds: (fields[6] as List).cast<int>(),
     );
   }
 
@@ -125,13 +125,13 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       ..write(obj.title)
       ..writeByte(2)
       ..write(obj.posterPath)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.overview)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.voteAverage)
-      ..writeByte(7)
+      ..writeByte(5)
       ..write(obj.releaseDate)
-      ..writeByte(8)
+      ..writeByte(6)
       ..write(obj.genreIds);
   }
 

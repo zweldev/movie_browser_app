@@ -15,7 +15,6 @@ MovieModel createMovieModel({int id = 1}) => MovieModel(
       title: 'Movie $id',
       overview: 'Overview $id',
       voteAverage: 7.5,
-      voteCount: 100,
       genreIds: [1, 2],
       popularity: 50.0,
     );
@@ -25,7 +24,6 @@ Movie createMovieEntity({int id = 1}) => Movie(
       title: 'Movie $id',
       overview: 'Overview $id',
       voteAverage: 7.5,
-      voteCount: 100,
       genreIds: [1, 2],
       popularity: 50.0,
     );
@@ -41,7 +39,6 @@ void main() {
       title: '',
       overview: '',
       voteAverage: 0,
-      voteCount: 0,
       genreIds: [],
       popularity: 0,
     ));
@@ -56,7 +53,8 @@ void main() {
   group('getPopularMovies', () {
     test('returns list of movies when remote data source succeeds', () async {
       final models = [createMovieModel(id: 1), createMovieModel(id: 2)];
-      when(() => remoteDataSource.getPopularMovies(page: 1)).thenAnswer((_) async => models);
+      when(() => remoteDataSource.getPopularMovies(page: 1))
+          .thenAnswer((_) async => models);
 
       final result = await repository.getPopularMovies();
 
@@ -68,7 +66,8 @@ void main() {
     });
 
     test('passes page parameter to remote data source', () async {
-      when(() => remoteDataSource.getPopularMovies(page: 5)).thenAnswer((_) async => []);
+      when(() => remoteDataSource.getPopularMovies(page: 5))
+          .thenAnswer((_) async => []);
 
       await repository.getPopularMovies(page: 5);
 
@@ -76,7 +75,8 @@ void main() {
     });
 
     test('throws exception when remote data source fails', () async {
-      when(() => remoteDataSource.getPopularMovies(page: 1)).thenThrow(Exception('Network error'));
+      when(() => remoteDataSource.getPopularMovies(page: 1))
+          .thenThrow(Exception('Network error'));
 
       expect(
         () => repository.getPopularMovies(),
@@ -88,7 +88,8 @@ void main() {
   group('getTopRatedMovies', () {
     test('returns list of movies when remote data source succeeds', () async {
       final models = [createMovieModel(id: 3), createMovieModel(id: 4)];
-      when(() => remoteDataSource.getTopRatedMovies(page: 1)).thenAnswer((_) async => models);
+      when(() => remoteDataSource.getTopRatedMovies(page: 1))
+          .thenAnswer((_) async => models);
 
       final result = await repository.getTopRatedMovies();
 
@@ -100,7 +101,8 @@ void main() {
     });
 
     test('throws exception when remote data source fails', () async {
-      when(() => remoteDataSource.getTopRatedMovies(page: 1)).thenThrow(Exception('Timeout'));
+      when(() => remoteDataSource.getTopRatedMovies(page: 1))
+          .thenThrow(Exception('Timeout'));
 
       expect(
         () => repository.getTopRatedMovies(),
@@ -112,7 +114,8 @@ void main() {
   group('getUpcomingMovies', () {
     test('returns list of movies when remote data source succeeds', () async {
       final models = [createMovieModel(id: 5)];
-      when(() => remoteDataSource.getUpcomingMovies(page: 1)).thenAnswer((_) async => models);
+      when(() => remoteDataSource.getUpcomingMovies(page: 1))
+          .thenAnswer((_) async => models);
 
       final result = await repository.getUpcomingMovies();
 
@@ -121,7 +124,8 @@ void main() {
     });
 
     test('throws exception when remote data source fails', () async {
-      when(() => remoteDataSource.getUpcomingMovies(page: 1)).thenThrow(Exception('Server error'));
+      when(() => remoteDataSource.getUpcomingMovies(page: 1))
+          .thenThrow(Exception('Server error'));
 
       expect(
         () => repository.getUpcomingMovies(),
@@ -134,7 +138,8 @@ void main() {
     test('returns movie when remote data source succeeds', () async {
       const movieId = 42;
       final model = createMovieModel(id: movieId);
-      when(() => remoteDataSource.getMovieDetails(movieId)).thenAnswer((_) async => model);
+      when(() => remoteDataSource.getMovieDetails(movieId))
+          .thenAnswer((_) async => model);
 
       final result = await repository.getMovieDetails(movieId);
 
@@ -144,7 +149,8 @@ void main() {
 
     test('throws exception when remote data source fails', () async {
       const movieId = 99;
-      when(() => remoteDataSource.getMovieDetails(movieId)).thenThrow(Exception('Not found'));
+      when(() => remoteDataSource.getMovieDetails(movieId))
+          .thenThrow(Exception('Not found'));
 
       expect(
         () => repository.getMovieDetails(movieId),
@@ -156,7 +162,8 @@ void main() {
   group('searchMovies', () {
     test('returns list of movies when remote data source succeeds', () async {
       final models = [createMovieModel(id: 1), createMovieModel(id: 2)];
-      when(() => remoteDataSource.searchMovies('action', page: 1)).thenAnswer((_) async => models);
+      when(() => remoteDataSource.searchMovies('action', page: 1))
+          .thenAnswer((_) async => models);
 
       final result = await repository.searchMovies('action');
 
@@ -168,7 +175,8 @@ void main() {
     });
 
     test('passes page parameter to remote data source', () async {
-      when(() => remoteDataSource.searchMovies('drama', page: 3)).thenAnswer((_) async => []);
+      when(() => remoteDataSource.searchMovies('drama', page: 3))
+          .thenAnswer((_) async => []);
 
       await repository.searchMovies('drama', page: 3);
 
@@ -176,7 +184,8 @@ void main() {
     });
 
     test('throws exception when remote data source fails', () async {
-      when(() => remoteDataSource.searchMovies('test', page: 1)).thenThrow(Exception('Search failed'));
+      when(() => remoteDataSource.searchMovies('test', page: 1))
+          .thenThrow(Exception('Search failed'));
 
       expect(
         () => repository.searchMovies('test'),
@@ -188,7 +197,8 @@ void main() {
   group('getFavorites', () {
     test('returns list of movies when local data source succeeds', () async {
       final models = [createMovieModel(id: 1), createMovieModel(id: 2)];
-      when(() => localDataSource.getFavorites()).thenAnswer((_) async => models);
+      when(() => localDataSource.getFavorites())
+          .thenAnswer((_) async => models);
 
       final result = await repository.getFavorites();
 
@@ -208,7 +218,8 @@ void main() {
     });
 
     test('throws exception when local data source fails', () async {
-      when(() => localDataSource.getFavorites()).thenThrow(Exception('Database error'));
+      when(() => localDataSource.getFavorites())
+          .thenThrow(Exception('Database error'));
 
       expect(
         () => repository.getFavorites(),
@@ -221,7 +232,8 @@ void main() {
     test('calls local data source with correct model', () async {
       final movie = createMovieEntity(id: 1);
       MovieModel? capturedModel;
-      when(() => localDataSource.addToFavorites(any())).thenAnswer((invocation) async {
+      when(() => localDataSource.addToFavorites(any()))
+          .thenAnswer((invocation) async {
         capturedModel = invocation.positionalArguments[0] as MovieModel;
       });
 
@@ -233,7 +245,8 @@ void main() {
 
     test('throws exception when local data source fails', () async {
       final movie = createMovieEntity(id: 1);
-      when(() => localDataSource.addToFavorites(any())).thenThrow(Exception('Storage full'));
+      when(() => localDataSource.addToFavorites(any()))
+          .thenThrow(Exception('Storage full'));
 
       expect(
         () => repository.addToFavorites(movie),
@@ -245,7 +258,8 @@ void main() {
   group('removeFromFavorites', () {
     test('calls local data source with correct movie id', () async {
       const movieId = 42;
-      when(() => localDataSource.removeFromFavorites(movieId)).thenAnswer((_) async {});
+      when(() => localDataSource.removeFromFavorites(movieId))
+          .thenAnswer((_) async {});
 
       await repository.removeFromFavorites(movieId);
 
@@ -254,7 +268,8 @@ void main() {
 
     test('throws exception when local data source fails', () async {
       const movieId = 42;
-      when(() => localDataSource.removeFromFavorites(movieId)).thenThrow(Exception('Delete failed'));
+      when(() => localDataSource.removeFromFavorites(movieId))
+          .thenThrow(Exception('Delete failed'));
 
       expect(
         () => repository.removeFromFavorites(movieId),
@@ -266,7 +281,8 @@ void main() {
   group('isFavorite', () {
     test('returns true when movie is in favorites', () async {
       const movieId = 1;
-      when(() => localDataSource.isFavorite(movieId)).thenAnswer((_) async => true);
+      when(() => localDataSource.isFavorite(movieId))
+          .thenAnswer((_) async => true);
 
       final result = await repository.isFavorite(movieId);
 
@@ -276,7 +292,8 @@ void main() {
 
     test('returns false when movie is not in favorites', () async {
       const movieId = 2;
-      when(() => localDataSource.isFavorite(movieId)).thenAnswer((_) async => false);
+      when(() => localDataSource.isFavorite(movieId))
+          .thenAnswer((_) async => false);
 
       final result = await repository.isFavorite(movieId);
 
@@ -286,7 +303,7 @@ void main() {
     test('throws exception when local data source fails', () async {
       const movieId = 3;
       when(() => localDataSource.isFavorite(movieId))
-      .thenThrow(Exception('Query error'));
+          .thenThrow(Exception('Query error'));
 
       expect(
         () => repository.isFavorite(movieId),

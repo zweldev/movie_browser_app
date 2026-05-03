@@ -17,9 +17,6 @@ class MovieModel extends HiveObject {
   @HiveField(5)
   final double voteAverage;
 
-  @HiveField(6)
-  final int voteCount;
-
   @HiveField(7)
   final String? releaseDate;
 
@@ -38,7 +35,6 @@ class MovieModel extends HiveObject {
     this.posterPath,
     required this.overview,
     required this.voteAverage,
-    required this.voteCount,
     this.releaseDate,
     required this.genreIds,
     required this.popularity,
@@ -64,7 +60,6 @@ class MovieModel extends HiveObject {
       posterPath: json['poster_path'] as String?,
       overview: json['overview'] as String? ?? '',
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
-      voteCount: json['vote_count'] as int? ?? 0,
       releaseDate: json['release_date'] as String?,
       genreIds: genresList,
       popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0,
@@ -79,7 +74,6 @@ class MovieModel extends HiveObject {
       'poster_path': posterPath,
       'overview': overview,
       'vote_average': voteAverage,
-      'vote_count': voteCount,
       'release_date': releaseDate,
       'genre_ids': genreIds,
       'popularity': popularity,
@@ -94,7 +88,6 @@ class MovieModel extends HiveObject {
       posterPath: movie.posterPath,
       overview: movie.overview,
       voteAverage: movie.voteAverage,
-      voteCount: movie.voteCount,
       releaseDate: movie.releaseDate,
       genreIds: movie.genreIds,
       popularity: movie.popularity,
@@ -109,7 +102,6 @@ class MovieModel extends HiveObject {
       posterPath: posterPath,
       overview: overview,
       voteAverage: voteAverage,
-      voteCount: voteCount,
       releaseDate: releaseDate,
       genreIds: genreIds,
       popularity: popularity,
@@ -134,7 +126,6 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       posterPath: fields[2] as String?,
       overview: fields[4] as String,
       voteAverage: fields[5] as double,
-      voteCount: fields[6] as int,
       releaseDate: fields[7] as String?,
       genreIds: (fields[8] as List).cast<int>(),
       popularity: fields[9] as double,
@@ -156,8 +147,6 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       ..write(obj.overview)
       ..writeByte(5)
       ..write(obj.voteAverage)
-      ..writeByte(6)
-      ..write(obj.voteCount)
       ..writeByte(7)
       ..write(obj.releaseDate)
       ..writeByte(8)

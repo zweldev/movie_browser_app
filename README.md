@@ -177,13 +177,25 @@ Dark theme by default. Toggle button in the app bar switches between light and d
 
 ## Screenshots
 
+### Dark Mode
+
 | Home | Search | Favorites |
 |------|--------|-----------|
-| ![Home](screenshots/home.png) | ![Search](screenshots/search.png) | ![Favorites](screenshots/favorites.png) |
+| ![Home](screenshots/dark/home.png) | ![Search](screenshots/dark/search.png) | ![Favorites](screenshots/dark/favorites.png) |
 
 | Movie Detail | Grid View |
 |-------------|-----------|
-| ![Detail](screenshots/detail.png) | ![Grid](screenshots/grid.png) |
+| ![Detail](screenshots/dark/detail.png) | ![Grid](screenshots/dark/grid.png) |
+
+### Light Mode
+
+| Home | Search | Favorites |
+|------|--------|-----------|
+| ![Home](screenshots/light/home.png) | ![Search](screenshots/light/search.png) | ![Favorites](screenshots/light/favorites.png) |
+
+| Movie Detail | Grid View |
+|-------------|-----------|
+| ![Detail](screenshots/light/detail.png) | ![Grid](screenshots/light/grid.png) |
 
 ## Running Tests
 

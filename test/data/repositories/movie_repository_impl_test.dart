@@ -16,7 +16,6 @@ MovieModel createMovieModel({int id = 1}) => MovieModel(
       overview: 'Overview $id',
       voteAverage: 7.5,
       genreIds: [1, 2],
-      popularity: 50.0,
     );
 
 Movie createMovieEntity({int id = 1}) => Movie(
@@ -25,7 +24,6 @@ Movie createMovieEntity({int id = 1}) => Movie(
       overview: 'Overview $id',
       voteAverage: 7.5,
       genreIds: [1, 2],
-      popularity: 50.0,
     );
 
 void main() {
@@ -40,7 +38,6 @@ void main() {
       overview: '',
       voteAverage: 0,
       genreIds: [],
-      popularity: 0,
     ));
   });
 

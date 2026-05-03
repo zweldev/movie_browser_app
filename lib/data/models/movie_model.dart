@@ -23,12 +23,6 @@ class MovieModel extends HiveObject {
   @HiveField(8)
   final List<int> genreIds;
 
-  @HiveField(9)
-  final double popularity;
-
-  @HiveField(10)
-  final String? originalLanguage;
-
   MovieModel({
     required this.id,
     required this.title,
@@ -37,8 +31,6 @@ class MovieModel extends HiveObject {
     required this.voteAverage,
     this.releaseDate,
     required this.genreIds,
-    required this.popularity,
-    this.originalLanguage,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
@@ -62,8 +54,6 @@ class MovieModel extends HiveObject {
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
       releaseDate: json['release_date'] as String?,
       genreIds: genresList,
-      popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0,
-      originalLanguage: json['original_language'] as String?,
     );
   }
 
@@ -76,8 +66,6 @@ class MovieModel extends HiveObject {
       'vote_average': voteAverage,
       'release_date': releaseDate,
       'genre_ids': genreIds,
-      'popularity': popularity,
-      'original_language': originalLanguage,
     };
   }
 
@@ -90,8 +78,6 @@ class MovieModel extends HiveObject {
       voteAverage: movie.voteAverage,
       releaseDate: movie.releaseDate,
       genreIds: movie.genreIds,
-      popularity: movie.popularity,
-      originalLanguage: movie.originalLanguage,
     );
   }
 
@@ -104,8 +90,6 @@ class MovieModel extends HiveObject {
       voteAverage: voteAverage,
       releaseDate: releaseDate,
       genreIds: genreIds,
-      popularity: popularity,
-      originalLanguage: originalLanguage,
     );
   }
 }
@@ -128,15 +112,13 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       voteAverage: fields[5] as double,
       releaseDate: fields[7] as String?,
       genreIds: (fields[8] as List).cast<int>(),
-      popularity: fields[9] as double,
-      originalLanguage: fields[10] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, MovieModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -150,11 +132,7 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       ..writeByte(7)
       ..write(obj.releaseDate)
       ..writeByte(8)
-      ..write(obj.genreIds)
-      ..writeByte(9)
-      ..write(obj.popularity)
-      ..writeByte(10)
-      ..write(obj.originalLanguage);
+      ..write(obj.genreIds);
   }
 
   @override

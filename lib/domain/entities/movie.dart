@@ -8,8 +8,6 @@ class Movie extends Equatable {
   final double voteAverage;
   final String? releaseDate;
   final List<int> genreIds;
-  final double popularity;
-  final String? originalLanguage;
 
   const Movie({
     required this.id,
@@ -19,8 +17,6 @@ class Movie extends Equatable {
     required this.voteAverage,
     this.releaseDate,
     required this.genreIds,
-    required this.popularity,
-    this.originalLanguage,
   });
 
   String get releaseYear {
@@ -37,7 +33,5 @@ class Movie extends Equatable {
         voteAverage,
         releaseDate,
         genreIds,
-        popularity,
-        originalLanguage,
       ];
 }

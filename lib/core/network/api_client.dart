@@ -23,19 +23,6 @@ class ApiClient {
         },
       ),
     );
-
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          options.queryParameters['api_key'] =
-              dotenv.env['TMDB_API_KEY'];
-          return handler.next(options);
-        },
-        onError: (error, handler) {
-          return handler.next(error);
-        },
-      ),
-    );
   }
 
   Dio get dio => _dio;
@@ -60,19 +47,13 @@ class ApiClient {
       );
 
       return _handleResponse(customResponse);
-    }
-
-    on TimeoutException {
+    } on TimeoutException {
       throw ConnectionTimeoutException();
     } on SocketException {
       throw NoInternetConnectionException();
-    }
-
-    on DioException catch (e) {
+    } on DioException catch (e) {
       throw _handleDioException(e);
-    }
-
-    catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       log('Unexpected error: $e', stackTrace: stackTrace);
       throw CustomException("An unexpected error occurred");
     }

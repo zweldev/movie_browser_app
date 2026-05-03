@@ -11,9 +11,6 @@ class MovieModel extends HiveObject {
   @HiveField(2)
   final String? posterPath;
 
-  @HiveField(3)
-  final String? backdropPath;
-
   @HiveField(4)
   final String overview;
 
@@ -39,7 +36,6 @@ class MovieModel extends HiveObject {
     required this.id,
     required this.title,
     this.posterPath,
-    this.backdropPath,
     required this.overview,
     required this.voteAverage,
     required this.voteCount,
@@ -66,7 +62,6 @@ class MovieModel extends HiveObject {
       id: json['id'] as int,
       title: json['title'] as String? ?? '',
       posterPath: json['poster_path'] as String?,
-      backdropPath: json['backdrop_path'] as String?,
       overview: json['overview'] as String? ?? '',
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
       voteCount: json['vote_count'] as int? ?? 0,
@@ -82,7 +77,6 @@ class MovieModel extends HiveObject {
       'id': id,
       'title': title,
       'poster_path': posterPath,
-      'backdrop_path': backdropPath,
       'overview': overview,
       'vote_average': voteAverage,
       'vote_count': voteCount,
@@ -98,7 +92,6 @@ class MovieModel extends HiveObject {
       id: movie.id,
       title: movie.title,
       posterPath: movie.posterPath,
-      backdropPath: movie.backdropPath,
       overview: movie.overview,
       voteAverage: movie.voteAverage,
       voteCount: movie.voteCount,
@@ -114,7 +107,6 @@ class MovieModel extends HiveObject {
       id: id,
       title: title,
       posterPath: posterPath,
-      backdropPath: backdropPath,
       overview: overview,
       voteAverage: voteAverage,
       voteCount: voteCount,
@@ -140,7 +132,6 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
       id: fields[0] as int,
       title: fields[1] as String,
       posterPath: fields[2] as String?,
-      backdropPath: fields[3] as String?,
       overview: fields[4] as String,
       voteAverage: fields[5] as double,
       voteCount: fields[6] as int,
@@ -154,15 +145,13 @@ class MovieModelAdapter extends TypeAdapter<MovieModel> {
   @override
   void write(BinaryWriter writer, MovieModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
       ..write(obj.posterPath)
-      ..writeByte(3)
-      ..write(obj.backdropPath)
       ..writeByte(4)
       ..write(obj.overview)
       ..writeByte(5)
